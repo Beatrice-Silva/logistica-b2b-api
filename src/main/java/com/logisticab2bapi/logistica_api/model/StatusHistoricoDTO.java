@@ -4,6 +4,8 @@
  */
 package com.logisticab2bapi.logistica_api.model;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,21 +15,27 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-
 @Entity
-@Table ( name ="status_historico")
+@Table(name = "status_historico")
+@Access(AccessType.FIELD)
 public class StatusHistoricoDTO {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
- 
-    private Long id;    
-    private Long id_pacote;
-    private String status;
-    private LocalDateTime data_hora;
-    private String desc_observ;
-    private Long id_usuario;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-   
+    @Column(name = "id_pacote")
+    private Long idPacote;
+    
+    private String status;
+    
+    @Column(name = "data_hora")
+    private LocalDateTime dataHora = LocalDateTime.now();
+    
+    @Column(name = "desc_observ")
+    private String descObserv;
+    
+    @Column(name = "id_usuario")
+    private Long idUsuario;
+
     public Long getId() {
         return id;
     }
@@ -36,12 +44,12 @@ public class StatusHistoricoDTO {
         this.id = id;
     }
 
-    public Long getId_pacote() {
-        return id_pacote;
+    public Long getIdPacote() {
+        return idPacote;
     }
 
-    public void setId_pacote(Long id_pacote) {
-        this.id_pacote = id_pacote;
+    public void setIdPacote(Long idPacote) {
+        this.idPacote = idPacote;
     }
 
     public String getStatus() {
@@ -52,29 +60,31 @@ public class StatusHistoricoDTO {
         this.status = status;
     }
 
-    public LocalDateTime getData_hora() {
-        return data_hora;
+    public LocalDateTime getDataHora() {
+        return dataHora;
     }
 
-    public void setData_hora(LocalDateTime data_hora) {
-        this.data_hora = data_hora;
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
     }
 
-    public String getDesc_observ() {
-        return desc_observ;
+    public String getDescObserv() {
+        return descObserv;
     }
 
-    public void setDesc_observ(String desc_observ) {
-        this.desc_observ = desc_observ;
+    public void setDescObserv(String descObserv) {
+        this.descObserv = descObserv;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
+
+    
     
     
 }

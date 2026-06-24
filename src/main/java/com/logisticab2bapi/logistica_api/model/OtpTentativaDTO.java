@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 /**
  *
  * @author BEATRICE
- */
+ *//*
 @Entity 
 @Table(name="otp_tentativas")
 public class OtpTentativaDTO {
@@ -23,10 +23,10 @@ public class OtpTentativaDTO {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     
     private Long id;
-    @Column(name="id_pacote") private Long idPacote;
-    
+    private String codigoLon;
+    private String codigoOtp;
+    private LocalDateTime data_geracao = LocalDateTime.now();
     private Integer tentativas = 0;
-    @Column(name="bloqueio_ate") private LocalDateTime bloqueioAte;   
 
     public Long getId() {
         return id;
@@ -36,12 +36,28 @@ public class OtpTentativaDTO {
         this.id = id;
     }
 
-    public Long getIdPacote() {
-        return idPacote;
+    public String getCodigoLon() {
+        return codigoLon;
     }
 
-    public void setIdPacote(Long idPacote) {
-        this.idPacote = idPacote;
+    public void setCodigoLon(String codigoLon) {
+        this.codigoLon = codigoLon;
+    }
+
+    public String getCodigoOtp() {
+        return codigoOtp;
+    }
+
+    public void setCodigoOtp(String codigoOtp) {
+        this.codigoOtp = codigoOtp;
+    }
+
+    public LocalDateTime getData_geracao() {
+        return data_geracao;
+    }
+
+    public void setData_geracao(LocalDateTime data_geracao) {
+        this.data_geracao = data_geracao;
     }
 
     public Integer getTentativas() {
@@ -51,17 +67,7 @@ public class OtpTentativaDTO {
     public void setTentativas(Integer tentativas) {
         this.tentativas = tentativas;
     }
-
-    public LocalDateTime getBloqueioAte() {
-        return bloqueioAte;
-    }
-
-    public void setBloqueioAte(LocalDateTime bloqueioAte) {
-        this.bloqueioAte = bloqueioAte;
-    }
-
-
-
-}
-
-
+    
+    
+        
+    }*/

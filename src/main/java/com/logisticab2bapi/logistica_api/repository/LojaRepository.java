@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author BEATRICE
  */
 public interface LojaRepository extends JpaRepository<LojaDTO, Long> {
-    LojaDTO findByCodigoLon(String codigoLon);
+    //LojaDTO findByCodigoLon(String codigoLon);
 }
     
 

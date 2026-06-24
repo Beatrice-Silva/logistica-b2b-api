@@ -4,6 +4,8 @@
  */
 package com.logisticab2bapi.logistica_api.model;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,25 +14,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 @Entity
-@Table (name ="pacotes")
-
+@Table(name = "lojas")
+@Access(AccessType.FIELD)
 public class LojaDTO {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome_estabelecimento;
     
-    @Column(name= "cnpj", unique = true) 
+    @Column(name = "codigo_lon")
+    private String codigoLon;
+    
+    @Column(name = "nome_estabelecimento")
+    private String nomeEstabelecimento;
+    
+    @Column(name = "cnpj", unique = true)
     private String cnpj;
     
-    private Long id_usuario;
-    private String contato_email;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
+    
+    @Column(name = "contato_email")
+    private String contatoEmail;
+    
     private String cidade;
     private String endereco;
-    
+
     public Long getId() {
         return id;
     }
@@ -39,12 +47,20 @@ public class LojaDTO {
         this.id = id;
     }
 
-    public String getNome_estabelecimento() {
-        return nome_estabelecimento;
+    public String getCodigoLon() {
+        return codigoLon;
     }
 
-    public void setNome_estabelecimento(String nome_estabelecimento) {
-        this.nome_estabelecimento = nome_estabelecimento;
+    public void setCodigoLon(String codigoLon) {
+        this.codigoLon = codigoLon;
+    }
+
+    public String getNomeEstabelecimento() {
+        return nomeEstabelecimento;
+    }
+
+    public void setNomeEstabelecimento(String nomeEstabelecimento) {
+        this.nomeEstabelecimento = nomeEstabelecimento;
     }
 
     public String getCnpj() {
@@ -55,20 +71,20 @@ public class LojaDTO {
         this.cnpj = cnpj;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public String getContato_email() {
-        return contato_email;
+    public String getContatoEmail() {
+        return contatoEmail;
     }
 
-    public void setContato_email(String contato_email) {
-        this.contato_email = contato_email;
+    public void setContatoEmail(String contatoEmail) {
+        this.contatoEmail = contatoEmail;
     }
 
     public String getCidade() {
@@ -86,6 +102,6 @@ public class LojaDTO {
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
-
+    
     
 }

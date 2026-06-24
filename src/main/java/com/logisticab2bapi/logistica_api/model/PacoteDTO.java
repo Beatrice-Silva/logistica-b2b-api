@@ -4,6 +4,8 @@
  */
 package com.logisticab2bapi.logistica_api.model;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,23 +17,33 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name ="pacotes")
+@Table(name = "pacotes")
+@Access(AccessType.FIELD)
 public class PacoteDTO {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long id;
-    
-    @Column(name= "codigo_lon", unique = true) 
+
+    @Column(name = "codigo_lon", unique = true, nullable = false)
     private String codigoLon;
-    
-    private String otp_codigo;
-    private LocalDateTime otp_expira;
-    private Long id_loja;
+
+    @Column(name = "otp_codigo")
+    private String otpCodigo;
+
+    @Column(name = "otp_expira")
+    private LocalDateTime otpExpira;
+
+    @Column(name = "id_loja")
+    private Long idLoja;
+
     private String endereco;
-    private String status_atual;
-    private String desc_observ;
+
+    @Column(name = "status_atual")
+    private String statusAtual;
+
+    @Column(name = "desc_observ")
+    private String descObserv;
+
     private Double peso;
 
     public Long getId() {
@@ -50,28 +62,28 @@ public class PacoteDTO {
         this.codigoLon = codigoLon;
     }
 
-    public String getOtp_codigo() {
-        return otp_codigo;
+    public String getOtpCodigo() {
+        return otpCodigo;
     }
 
-    public void setOtp_codigo(String otp_codigo) {
-        this.otp_codigo = otp_codigo;
+    public void setOtpCodigo(String otpCodigo) {
+        this.otpCodigo = otpCodigo;
     }
 
-    public LocalDateTime getOtp_expira() {
-        return otp_expira;
+    public LocalDateTime getOtpExpira() {
+        return otpExpira;
     }
 
-    public void setOtp_expira(LocalDateTime otp_expira) {
-        this.otp_expira = otp_expira;
+    public void setOtpExpira(LocalDateTime otpExpira) {
+        this.otpExpira = otpExpira;
     }
 
-    public Long getId_loja() {
-        return id_loja;
+    public Long getIdLoja() {
+        return idLoja;
     }
 
-    public void setId_loja(Long id_loja) {
-        this.id_loja = id_loja;
+    public void setIdLoja(Long idLoja) {
+        this.idLoja = idLoja;
     }
 
     public String getEndereco() {
@@ -82,20 +94,20 @@ public class PacoteDTO {
         this.endereco = endereco;
     }
 
-    public String getStatus_atual() {
-        return status_atual;
+    public String getStatusAtual() {
+        return statusAtual;
     }
 
-    public void setStatus_atual(String status_atual) {
-        this.status_atual = status_atual;
+    public void setStatusAtual(String statusAtual) {
+        this.statusAtual = statusAtual;
     }
 
-    public String getDesc_observ() {
-        return desc_observ;
+    public String getDescObserv() {
+        return descObserv;
     }
 
-    public void setDesc_observ(String desc_observ) {
-        this.desc_observ = desc_observ;
+    public void setDescObserv(String descObserv) {
+        this.descObserv = descObserv;
     }
 
     public Double getPeso() {
@@ -105,7 +117,7 @@ public class PacoteDTO {
     public void setPeso(Double peso) {
         this.peso = peso;
     }
-    
-    
+
+   
     
 }

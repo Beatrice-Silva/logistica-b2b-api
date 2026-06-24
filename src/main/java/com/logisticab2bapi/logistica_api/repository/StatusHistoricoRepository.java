@@ -5,6 +5,7 @@
 package com.logisticab2bapi.logistica_api.repository;
 
 import com.logisticab2bapi.logistica_api.model.StatusHistoricoDTO;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author BEATRICE
  */
 public interface StatusHistoricoRepository extends JpaRepository<StatusHistoricoDTO, Long> {
-    StatusHistoricoDTO findByCodigoLon(String codigoLon);
+    //List<StatusHistoricoDTO> findByCodigoLonOrderByDataHoraDesc(String codigoLon);
 }
