@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `db_logisticab2b` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `db_logisticab2b` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `db_logisticab2b`;
--- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
--- Host: localhost    Database: db_logisticab2b
+-- Host: 127.0.0.1    Database: db_logisticab2b
 -- ------------------------------------------------------
--- Server version	8.0.46
+-- Server version	5.5.5-10.4.32-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,10 +25,10 @@ DROP TABLE IF EXISTS `lojas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lojas` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `nome_estabelecimento` varchar(100) NOT NULL,
   `cnpj` varchar(18) NOT NULL,
-  `id_usuario` bigint NOT NULL,
+  `id_usuario` bigint(20) NOT NULL,
   `contato_email` varchar(100) NOT NULL,
   `cidade` varchar(50) NOT NULL,
   `endereco` varchar(255) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `lojas` (
   UNIQUE KEY `cnpj` (`cnpj`),
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `lojas_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,20 +57,20 @@ DROP TABLE IF EXISTS `pacotes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pacotes` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `codigo_lon` varchar(30) NOT NULL,
   `otp_codigo` varchar(6) DEFAULT NULL,
   `otp_expira` datetime DEFAULT NULL,
-  `id_loja` bigint NOT NULL,
+  `id_loja` bigint(20) NOT NULL,
   `endereco` varchar(100) NOT NULL,
   `status_atual` enum('Criado','Coletado','Em transito','Entregue','Devolvido') NOT NULL DEFAULT 'Criado',
   `peso` double NOT NULL,
-  `desc_observ` text,
+  `desc_observ` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `codigo_lon` (`codigo_lon`),
   KEY `id_loja` (`id_loja`),
   CONSTRAINT `pacotes_ibfk_1` FOREIGN KEY (`id_loja`) REFERENCES `lojas` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,16 +91,16 @@ DROP TABLE IF EXISTS `status_historico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `status_historico` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `id_pacote` bigint NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_pacote` bigint(20) NOT NULL,
   `status` varchar(45) NOT NULL,
   `data_hora` datetime NOT NULL,
-  `desc_observ` text,
-  `id_usuario` bigint NOT NULL,
+  `desc_observ` text DEFAULT NULL,
+  `id_usuario` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `status_historico_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,13 +121,13 @@ DROP TABLE IF EXISTS `usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuarios` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
   `email` varchar(100) NOT NULL,
   `senha` varchar(10) NOT NULL,
-  `perfilrole` enum('admin','operador') NOT NULL DEFAULT 'admin',
+  `perfilrole` enum('admin','entregador','operador') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Admin Sistema','admin@log.com','admin123','admin'),(2,'Carlos Silva','carlos@loja.com','loja123','operador'),(3,'Ana Souza','ana@entrega.com','ana123','operador'),(4,'Marcos Lima','marcos@loja.com','marcos1','operador'),(5,'Julia Costa','julia@log.com','julia123','admin');
+INSERT INTO `usuarios` VALUES (1,'Admin Sistema','admin@log.com','admin123','admin'),(2,'Carlos Silva','carlos@loja.com','loja123','operador'),(3,'Ana Souza','ana@entrega.com','ana123','operador'),(4,'Marcos Lima','marcos@loja.com','marcos1','operador'),(5,'Julia Costa','julia@log.com','julia123','admin'),(6,'Jonathan Almeida','jonathan@delivers.com','1234567Jj','entregador');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -149,4 +149,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-23  8:23:23
+-- Dump completed on 2026-06-25 17:20:38
