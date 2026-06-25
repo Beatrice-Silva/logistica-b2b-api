@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author BEATRICE
  */
 public interface UsuarioRepository extends JpaRepository<UsuarioDTO, Long> {
+    
     UsuarioDTO findByEmail(String email);
     UsuarioDTO findByEmailAndSenha(String email, String senha);
 }
