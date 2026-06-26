@@ -16,10 +16,11 @@ import java.time.LocalDateTime;
  *
  * @author BEATRICE
  */
+/*
 @Entity 
 @Table(name="otp_tentativas")
 public class OtpTentativaDTO {
-   /*
+   
     @Id 
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     
@@ -68,7 +69,8 @@ public class OtpTentativaDTO {
     public void setTentativas(Integer tentativas) {
         this.tentativas = tentativas;
     }
-    */
+   
     
         
     }
+ */
