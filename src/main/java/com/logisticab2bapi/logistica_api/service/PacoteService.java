@@ -5,8 +5,8 @@
 package com.logisticab2bapi.logistica_api.service;
 
 //import com.logisticab2bapi.logistica_api.model.OtpTentativaDTO;
-import com.logisticab2bapi.logistica_api.model.PacoteDTO;
-import com.logisticab2bapi.logistica_api.model.StatusHistoricoDTO;
+import com.logisticab2bapi.logistica_api.model.Pacote;
+import com.logisticab2bapi.logistica_api.model.StatusHistorico;
 //import com.logisticab2bapi.logistica_api.repository.OtpTentativaRepository;
 import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 import com.logisticab2bapi.logistica_api.repository.StatusHistoricoRepository;
@@ -32,24 +32,24 @@ public class PacoteService {
     private final List<String> FLUXO = List.of("Criado","Coletado","Em transito","Entregue","Devolvido");
 
     
-    public PacoteDTO criar(PacoteDTO p){
+    public Pacote criar(Pacote p){
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count() + 1);
         p.setCodigoLon(codigo);
         p.setStatusAtual("Criado");
-        PacoteDTO salvo = pacoteRepo.save(p);
+        Pacote salvo = pacoteRepo.save(p);
         
         salvarHistorico(salvo.getId(), "Criado", 1L, "Remessa criada");
         return salvo;
     }
 
     
-    public PacoteDTO buscarPorCodigo(String codigo){
+    public Pacote buscarPorCodigo(String codigo){
         return pacoteRepo.findByCodigoLon(codigo);
     }
 
     
-    public PacoteDTO atualizar(Long id, String novoStatus, String otp, String perfil){
-        PacoteDTO p = pacoteRepo.findById(id).orElseThrow();
+    public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
+        Pacote p = pacoteRepo.findById(id).orElseThrow();
         
         // RN03 - não pular
         int atual = FLUXO.indexOf(p.getStatusAtual());
@@ -79,7 +79,7 @@ public class PacoteService {
         return p;
     }
     
-    private void validarOtp(PacoteDTO p, String otp){
+    private void validarOtp(Pacote p, String otp){
         if(p.getOtpCodigo() == null || !p.getOtpCodigo().equals(otp)){
             throw new RuntimeException("OTP inválido");
     }
@@ -89,7 +89,7 @@ public class PacoteService {
     
     }
     private void salvarHistorico(Long idPacote, String status, Long idUsuario, String obs){
-        StatusHistoricoDTO h = new StatusHistoricoDTO();
+        StatusHistorico h = new StatusHistorico();
         
         h.setId(idPacote);
         h.setStatus(status);

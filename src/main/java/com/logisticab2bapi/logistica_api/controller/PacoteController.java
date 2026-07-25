@@ -4,7 +4,7 @@
  */
 package com.logisticab2bapi.logistica_api.controller;
 
-import com.logisticab2bapi.logistica_api.model.PacoteDTO;
+import com.logisticab2bapi.logistica_api.model.Pacote;
 import com.logisticab2bapi.logistica_api.service.PacoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,17 +28,17 @@ public class PacoteController {
     @Autowired private PacoteService service;
 
     @PostMapping
-    public PacoteDTO criar(@RequestBody PacoteDTO pacote){
+    public Pacote criar(@RequestBody Pacote pacote){
         return service.criar(pacote); 
     } 
 
     @GetMapping("/{codigo}")
-    public PacoteDTO rastrear(@PathVariable String codigo){
+    public Pacote rastrear(@PathVariable String codigo){
         return service.buscarPorCodigo(codigo); 
     }
 
     @PutMapping("/{id}/status")
-    public PacoteDTO status(@PathVariable Long id, 
+    public Pacote status(@PathVariable Long id, 
             @RequestParam String novo, 
             @RequestParam(required = false) String otp, 
             @RequestParam String perfil){

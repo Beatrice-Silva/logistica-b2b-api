@@ -4,15 +4,35 @@
  */
 package com.logisticab2bapi.logistica_api.repository;
 
-import com.logisticab2bapi.logistica_api.model.LojaDTO;
+import com.logisticab2bapi.logistica_api.model.Loja;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author BEATRICE
  */
-public interface LojaRepository extends JpaRepository<LojaDTO, Long> {
-    //LojaDTO findByCodigoLon(String codigoLon);
+@Repository
+public interface LojaRepository extends JpaRepository<Loja, Long> {
+    
+    //Nao deixar cpnj ser duplicado quando cadastrado
+    Optional<Loja> fingByCnpj(String cnpj);
+    
+    List<Loja> findByAtivoTrue();
+    //Listar lojas apenas ativas para quando criar remessa
+    
+    List<Loja> findByIdUsuario(Long idUsuario);
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
     
 

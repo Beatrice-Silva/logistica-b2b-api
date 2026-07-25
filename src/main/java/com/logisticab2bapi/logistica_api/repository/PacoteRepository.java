@@ -4,13 +4,27 @@
  */
 package com.logisticab2bapi.logistica_api.repository;
 
-import com.logisticab2bapi.logistica_api.model.PacoteDTO;
+import com.logisticab2bapi.logistica_api.model.Pacote;
+import com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author BEATRICE
  */
-public interface PacoteRepository extends JpaRepository<PacoteDTO, Long> {
-    PacoteDTO findByCodigoLon(String codigoLon);
+@Repository //
+public interface PacoteRepository extends JpaRepository<Pacote, Long> {
+    
+    //consulta publica do destinatario
+    Optional<Pacote> findByCodigoRastreio(String codigoRastreio);
+    
+    //Contagem de quantos em cada status no dashboard
+    long countByStatusAtual(StatusAtual statusAtual);
+   
+    List<Pacote> findByIdLoja(Long idLoja);
+    
+    
 }

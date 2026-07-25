@@ -4,14 +4,21 @@
  */
 package com.logisticab2bapi.logistica_api.repository;
 
-import com.logisticab2bapi.logistica_api.model.UsuarioDTO;
+import com.logisticab2bapi.logistica_api.model.Usuario;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author BEATRICE
  */
-public interface UsuarioRepository extends JpaRepository<UsuarioDTO, Long> {
-    UsuarioDTO findByEmail(String email);
-    UsuarioDTO findByEmailAndSenha(String email, String senha);
-}
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    
+    //Retorne opcional para nao quebrar caso nao achar
+    Optional<Usuario> findByeEmail(String email);
+    
+    //verificar se email ja existe quando admin cadastrar
+    boolean existsByEmail(String email);
+    }

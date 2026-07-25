@@ -15,15 +15,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "status_historico")
-@Access(AccessType.FIELD)
-public class StatusHistoricoDTO {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class StatusHistorico {
+    
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(name = "id_pacote")
     private Long idPacote;
+    
+    @Column(name = "id_usuario")
+    private Long idUsuario;
     
     private String status;
     
@@ -33,8 +38,6 @@ public class StatusHistoricoDTO {
     @Column(name = "desc_observ")
     private String descObserv;
     
-    @Column(name = "id_usuario")
-    private Long idUsuario;
 
     public Long getId() {
         return id;

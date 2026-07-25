@@ -1,0 +1,128 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.logisticab2bapi.logistica_api.model;
+
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "pacotes")
+public class Pacote {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "codigo_rastreio", unique = true)
+    private String codigoRastreio;
+
+    @Column(name = "id_loja")
+    private Long idLoja;
+    
+    @Column(name = "endereco_destino")
+    private String enderecoDestino;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_atual")
+    private String statusAtual;
+    
+    @Column(name = "otp_codigo")
+    private String otpCodigo;
+
+    @Column(name = "otp_expira")
+    private LocalDateTime otpExpira;
+    
+    @Column(name = "desc_observ")
+    private String descObserv;
+
+    //opcoes limitadas de status
+    public enum StatusAtual {
+        Criado, //operador cria
+        Coletado, //operador coleta
+        Em_transito, //com entregador
+        Entregue, //Com OTP valido
+        Devolvido
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCodigoRastreio() {
+        return codigoRastreio;
+    }
+
+    public void setCodigoRastreio(String codigoRastreio) {
+        this.codigoRastreio = codigoRastreio;
+    }
+
+    public Long getIdLoja() {
+        return idLoja;
+    }
+
+    public void setIdLoja(Long idLoja) {
+        this.idLoja = idLoja;
+    }
+
+    public String getEnderecoDestino() {
+        return enderecoDestino;
+    }
+
+    public void setEnderecoDestino(String enderecoDestino) {
+        this.enderecoDestino = enderecoDestino;
+    }
+
+    public String getStatusAtual() {
+        return statusAtual;
+    }
+
+    public void setStatusAtual(String statusAtual) {
+        this.statusAtual = statusAtual;
+    }
+
+    public String getOtpCodigo() {
+        return otpCodigo;
+    }
+
+    public void setOtpCodigo(String otpCodigo) {
+        this.otpCodigo = otpCodigo;
+    }
+
+    public LocalDateTime getOtpExpira() {
+        return otpExpira;
+    }
+
+    public void setOtpExpira(LocalDateTime otpExpira) {
+        this.otpExpira = otpExpira;
+    }
+
+    public String getDescObserv() {
+        return descObserv;
+    }
+
+    public void setDescObserv(String descObserv) {
+        this.descObserv = descObserv;
+    }
+    
+    
+    
+    
+
+    
+}

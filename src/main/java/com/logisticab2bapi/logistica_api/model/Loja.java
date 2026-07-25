@@ -14,20 +14,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "lojas")
-@Access(AccessType.FIELD)
-public class LojaDTO {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Loja {
     
-    @Column(name = "codigo_lon")
-    private String codigoLon;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "nome_estabelecimento")
     private String nomeEstabelecimento;
     
-    @Column(name = "cnpj", unique = true)
+    @Column(unique = true) //nao deve repetir
     private String cnpj;
     
     @Column(name = "id_usuario")
@@ -36,8 +35,13 @@ public class LojaDTO {
     @Column(name = "contato_email")
     private String contatoEmail;
     
+    @Column(name = "codigo_lon")
+    private String codigoLon;
+    
     private String cidade;
     private String endereco;
+    
+    private Boolean ativo = true;
 
     public Long getId() {
         return id;

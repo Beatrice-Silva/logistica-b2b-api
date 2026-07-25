@@ -4,7 +4,7 @@
  */
 package com.logisticab2bapi.logistica_api.controller;
 
-import com.logisticab2bapi.logistica_api.model.UsuarioDTO;
+import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.service.AuditoriaService;
 import com.logisticab2bapi.logistica_api.service.UsuarioService;
 import java.util.Map;
@@ -26,15 +26,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
     
     @Autowired
-    private UsuarioService service; // <-- era AuditoriaService (ERRADO)
-    
+    private UsuarioService service; 
+
+  
+    @PostMapping("/registrar")
+    public String registrar(@RequestBody Usuario user){
+        service.register(user);
+        return "Cadastro Feito com sucesso";
+    }
+    /*
     @PostMapping("/registrar")
     public UsuarioDTO registrar(@RequestBody UsuarioDTO user){
         return service.register(user);
     }
+    */
     
     @PostMapping("/login")
-    public UsuarioDTO login(@RequestBody Map<String,String> login) {   
+    public Usuario login(@RequestBody Map<String,String> login) {   
         return service.logar(login.get("email"), login.get("senha"));
     }
 }

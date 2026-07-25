@@ -4,7 +4,7 @@
  */
 package com.logisticab2bapi.logistica_api.service;
 
-import com.logisticab2bapi.logistica_api.model.UsuarioDTO;
+import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class UsuarioService {
    @Autowired
     private UsuarioRepository repository;
     
-    public UsuarioDTO register(UsuarioDTO user){
+    public Usuario register(Usuario user){
         if(user.getNome() == null || user.getNome().isBlank()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome não preenchido");
         }
@@ -41,11 +41,11 @@ public class UsuarioService {
         return repository.save(user);
     }
     
-    public UsuarioDTO logar(String email, String senha){
+    public Usuario logar(String email, String senha){
         if(email == null || email.isBlank() || senha == null || senha.isBlank()){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email e senha obrigatórios");
         }
-        UsuarioDTO user = repository.findByEmailAndSenha(email, senha);
+        Usuario user = repository.findByEmailAndSenha(email, senha);
         if(user == null){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou senha incorretos");
         }
