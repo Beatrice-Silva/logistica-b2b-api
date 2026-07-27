@@ -6,8 +6,10 @@ package com.logisticab2bapi.logistica_api.controller;
 
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.service.UsuarioService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,25 +22,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
-    
-    @Autowired
-    private UsuarioService usuarioService;
-   
-    
+    @Autowired private UsuarioService usuarioService;
+
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody Usuario user) {   
-        String token = usuarioService.logar(user);
-        
-        AuthResponseDTO resposta = new AuthResponseDTO();
-        resposta.setToken(token);
-        
-    return ResponseEntity.ok(resposta);
-        
-    //throw new ResponseStatusException(HttpStatusCode.valueOf(403), "Este edital se encontra `ENCERRADO`! " );
+    public ResponseEntity<Usuario> login(@RequestBody Map<String,String> login){
+        Usuario u = usuarioService.logar(login.get("email"), login.get("senha"));
+        return ResponseEntity.ok(u);
     }
-     
+
+    @PostMapping("/registrar")
+    public ResponseEntity<String> registrar(@RequestBody Usuario user){
+        usuarioService.register(user);
+        return ResponseEntity.ok("Cadastro feito com sucesso");
+    }
 }
+     
+
     
     
     
