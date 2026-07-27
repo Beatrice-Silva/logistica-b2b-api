@@ -23,8 +23,6 @@ public class Usuario {
     //banco gera sozinho
     private Long id;
     private String nome;
-    
-    @Column(unique = true) //nao pode repetir email
     private String email;
     
     private String senha;

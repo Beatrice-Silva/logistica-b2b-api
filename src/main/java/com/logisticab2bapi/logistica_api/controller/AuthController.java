@@ -39,25 +39,7 @@ public class AuthController {
     }
      
 }
-      
-    //Faltam = 
     
-    /*
-    USUARIOCONTROLLER
-    Adicionar ao banco, usuarios como ADMIN
-    
-    AUDITORIASERVICE
-    
-    LOGO:
-    FRONT END PASTAS E HTMLS
-    
-    TCC ESCRITO E ORGANIZADO TUDO
-    
-    DIAGRAMAS FINAIS
-    
-    SUBIR PRO GITHUB
-    
-    */
     
     
     

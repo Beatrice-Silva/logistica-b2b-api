@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author BEATRICE
  */
-@Repository //
+@Repository //repo ->
 public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     
     //consulta publica do destinatario

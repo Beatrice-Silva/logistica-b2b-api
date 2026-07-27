@@ -18,6 +18,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     
     //Retorne opcional para nao quebrar caso nao achar
     Optional<Usuario> findByeEmail(String email);
+    //Optional -> Pode vir vazio -> Evitando erro de null pointer
     
     //verificar se email ja existe quando admin cadastrar
     boolean existsByEmail(String email);

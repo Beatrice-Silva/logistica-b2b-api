@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class PacoteService {
     @Autowired private PacoteRepository pacoteRepo;
     @Autowired private StatusHistoricoRepository histRepo;
+    
     //@Autowired private OtpTentativaRepository otpRepo;
     @Autowired private NotificacaoService notif;
     

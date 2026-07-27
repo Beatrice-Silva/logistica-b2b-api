@@ -4,10 +4,13 @@
  */
 package com.logisticab2bapi.logistica_api.service;
 
+import org.springframework.stereotype.Service;
+
 /**
  *
  * @author BEATRICE
  */
+@Service
 public class AuditoriaService {
     
 }

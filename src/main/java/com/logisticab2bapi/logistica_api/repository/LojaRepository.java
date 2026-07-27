@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author BEATRICE
  */
-@Repository
+@Repository //Loja -> loja origem
 public interface LojaRepository extends JpaRepository<Loja, Long> {
     
     //Nao deixar cpnj ser duplicado quando cadastrado
