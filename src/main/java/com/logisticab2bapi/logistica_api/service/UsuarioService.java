@@ -49,11 +49,12 @@ public class UsuarioService {
         
        
         Usuario user = repository.findByEmail(email).orElseThrow(() -> 
-                new ResponseStatusException(HttpStatus.UNAUTHORIZED), "Campo email ou senha estão incorretos");
-        //comparacao de senha
+          new ResponseStatusException(HttpStatus.UNAUTHORIZED), "Campo email ou senha estão incorretos");
+        comparacao de senha
         if(!encoder.matches(senha, user.getSenha())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Campo email ou senha estão incorretos");
         }
         return user;
+        
     }      
     }

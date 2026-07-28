@@ -37,13 +37,11 @@ public class PacoteService {
     public Pacote criar(Pacote p){
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
         p.setCodigoRastreio(codigo);
-        
-        //erro create ANUM
-        p.setStatusAtual(StatusAtual.CRIADO);
+       
+        p.setStatusAtual(StatusAtual.Criado);
         
         Pacote salvo = pacoteRepo.save(p);
-        
-        //change method erro
+       
         salvarHistorico(salvo.getId(), "CRIADO", "Remessa criada");
         
         notificacaoService.enviarEmail(salvo.getEnderecoDestino(), "Criado:" +codigo);
@@ -60,7 +58,6 @@ public class PacoteService {
     public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
         Pacote p = pacoteRepo.findById(id).orElseThrow();
        
-        //name erro cannot find symbol
         int atual = FLUXO.indexOf(p.getStatusAtual().name);
         
         int novo = FLUXO.indexOf(novoStatus.toUpperCase());
@@ -71,12 +68,11 @@ public class PacoteService {
             p.setOtpExpira(LocalDateTime.now().plusHours(24));
         }
         
-        //StatusAtual nao e achado
+       
         p.setStatusAtual(StatusAtual.valueOf(novoStatus.toUpperCase()));
         Pacote salvo = pacoteRepo.save(p);
         
-        //email da erro por ter que criar esta varivel que ele n achou
-        salvarHistorico(salvo.getId(), novoStatus,"Atualizado por" + email);
+        salvarHistorico(salvo.getId(), novoStatus,"Atualizado por" +  );
         return salvo;
     }
 

@@ -19,10 +19,10 @@ public class TesteController {
     
     
     @Autowired 
-    private TokenService service; //instacia
+    private TokenService tokenService; //instacia
     
    @GetMapping("/teste") 
     public String testeToken(){
-        return service.gerarToken(); 
+        return tokenService.gerarToken(); 
    } 
 }
