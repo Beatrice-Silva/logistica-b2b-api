@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class NotificacaoService {
-      @Async //@EnableAsync na main
+    
+    @Async //@EnableAsync na main
     public void enviarEmail(String para, String msg){
         System.out.println("[ASYNC] Email para " +para+ ": "+msg); 
     }
+    
 }

@@ -24,42 +24,73 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PacoteService {
-    @Autowired private PacoteRepository pacoteRepo;
-    @Autowired private StatusHistoricoRepository histRepo;
-
+    
+    @Autowired 
+    private PacoteRepository pacoteRepo;
+    @Autowired 
+    private StatusHistoricoRepository histRepo;
+    @Autowired
+    private NotificacaoService notificacaoService;
+    
     private final List<String> FLUXO = List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE");
 
     public Pacote criar(Pacote p){
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
         p.setCodigoRastreio(codigo);
+        
+        //erro create ANUM
         p.setStatusAtual(StatusAtual.CRIADO);
+        
         Pacote salvo = pacoteRepo.save(p);
-        salvarHistorico(salvo.getId(), "CRIADO", 1L, "Remessa criada");
+        
+        //change method erro
+        salvarHistorico(salvo.getId(), "CRIADO", "Remessa criada");
+        
+        notificacaoService.enviarEmail(salvo.getEnderecoDestino(), "Criado:" +codigo);
         return salvo;
     }
 
     public Pacote buscarPorCodigo(String codigo){
-        return pacoteRepo.findByCodigoRastreio(codigo).orElseThrow(() -> new RuntimeException("Pacote não encontrado"));
+        return pacoteRepo
+                .findByCodigoRastreio(codigo)
+                .orElseThrow(() -> 
+                new RuntimeException("Pacote não encontrado"));
     }
 
     public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
         Pacote p = pacoteRepo.findById(id).orElseThrow();
-        // validação simples do fluxo
-        int atual = FLUXO.indexOf(p.getStatusAtual().name());
-        int novo = FLUXO.indexOf(novoStatus);
+       
+        //name erro cannot find symbol
+        int atual = FLUXO.indexOf(p.getStatusAtual().name);
+        
+        int novo = FLUXO.indexOf(novoStatus.toUpperCase());
         if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
         
-        if(novoStatus.equals("EM_TRANSITO")){
+        if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
             p.setOtpCodigo(String.format("%06d", new Random().nextInt(999999)));
             p.setOtpExpira(LocalDateTime.now().plusHours(24));
         }
-        p.setStatusAtual(StatusAtual.valueOf(novoStatus));
-        return pacoteRepo.save(p);
+        
+        //StatusAtual nao e achado
+        p.setStatusAtual(StatusAtual.valueOf(novoStatus.toUpperCase()));
+        Pacote salvo = pacoteRepo.save(p);
+        
+        //email da erro por ter que criar esta varivel que ele n achou
+        salvarHistorico(salvo.getId(), novoStatus,"Atualizado por" + email);
+        return salvo;
     }
 
-    private void salvarHistorico(Long idPacote, String status, Long idUsuario, String obs){
+    private void salvarHistorico(
+            Long idPacote, 
+            String status, 
+            Long idUsuario, 
+            String obs){
+        
         StatusHistorico h = new StatusHistorico();
-        h.setIdPacote(idPacote); h.setStatus(status); h.setDataHora(LocalDateTime.now());
+        h.setIdPacote(idPacote); 
+        h.setStatus(status); 
+        h.setDataHora(LocalDateTime.now());
+        h.setDescObserv(obs);
         histRepo.save(h);
     }
 }

@@ -5,20 +5,15 @@
 package com.logisticab2bapi.logistica_api.repository;
 
 import com.logisticab2bapi.logistica_api.model.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
+
 /**
  *
  * @author BEATRICE
  */
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    
-    
+public interface AuthResponse {
     Optional<Usuario> findByEmail(String email);
     
-    
-    
-    boolean existsByEmail(String email);
-    }
+}

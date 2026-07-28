@@ -5,6 +5,7 @@
 package com.logisticab2bapi.logistica_api.controller;
 
 import com.logisticab2bapi.logistica_api.model.Usuario;
+import com.logisticab2bapi.logistica_api.service.TokenService;
 import com.logisticab2bapi.logistica_api.service.UsuarioService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
+    
     @Autowired private UsuarioService usuarioService;
+    @Autowired private TokenService tokenServicee;
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(@RequestBody Map<String,String> login){
-        Usuario u = usuarioService.logar(login.get("email"), login.get("senha"));
-        return ResponseEntity.ok(u);
+    //AuthResponseDTo da erro pela classe nao criada ainda
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody Map<String,String> login){
+        
+        Usuario u = usuarioService.validarLogin(login.get("email"), login.get("senha"));
+        
+        String token = tokenService.gerarToken(u);
+        return ResponseEntity.ok(new AuthResponseDTO(token, u.getPerfilRole().name(), u.getEmail()));
     }
 
     @PostMapping("/registrar")
