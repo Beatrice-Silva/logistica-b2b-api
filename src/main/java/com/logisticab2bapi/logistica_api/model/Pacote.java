@@ -49,11 +49,11 @@ public class Pacote {
 
     //opcoes limitadas de status
     public enum StatusAtual {
-        Criado, //operador cria
-        Coletado, //operador coleta
-        Em_transito, //com entregador
-        Entregue, //Com OTP valido
-        Devolvido
+        CRIADO, //operador cria
+        COLETADO, //operador coleta
+        EM_TRANSITO, //com entregador
+        ENTREGUE, //Com OTP valido
+        DEVOLVIDO
     }
 
     public Long getId() {

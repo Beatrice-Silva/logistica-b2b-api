@@ -32,7 +32,7 @@ public class TokenService {
     
     public String gerarToken() {
         return Jwts.builder()
-                .subject("iago.teste@teste.com") //identificador do usuário
+                .subject("usuario.teste@teste.com") //identificador do usuário
                 .issuedAt(new Date())// Define quando o token foi criado
                 .expiration(new Date(System.currentTimeMillis() + 300000)) //5 min do teste
                 .signWith(getSignKey())//assina o token com a chave secreta HMAC-SHA

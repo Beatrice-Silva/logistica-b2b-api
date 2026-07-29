@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author BEATRICE
  */
+/*
 @RestController
 public class TesteController {
     
@@ -23,6 +24,7 @@ public class TesteController {
     
    @GetMapping("/teste") 
     public String testeToken(){
-        return tokenService.gerarToken(); 
+        return tokenService. 
    } 
 }
+*/

@@ -38,13 +38,19 @@ public class PacoteService {
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
         p.setCodigoRastreio(codigo);
        
-        p.setStatusAtual(StatusAtual.Criado);
+        /* o erro fala create ENUM constant 
+        em Pacote.statusAtual
+        */        
+        //p.setStatusAtual(StatusAtual.CRIADO);
+        
+        p.setStatusAtual(StatusAtual.CRIADO); // precisa existir no enum
         
         Pacote salvo = pacoteRepo.save(p);
-       
         salvarHistorico(salvo.getId(), "CRIADO", "Remessa criada");
         
-        notificacaoService.enviarEmail(salvo.getEnderecoDestino(), "Criado:" +codigo);
+        try {
+            notificacaoService.enviarEmail(salvo.getEnderecoDestino(), "Criado: " + codigo);
+        } catch(Exception e){ System.out.println("Email não enviado: " + e.getMessage()); }
         return salvo;
     }
 
@@ -58,7 +64,9 @@ public class PacoteService {
     public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
         Pacote p = pacoteRepo.findById(id).orElseThrow();
        
-        int atual = FLUXO.indexOf(p.getStatusAtual().name);
+        //ele fala split assignment 
+        int atual = FLUXO.indexOf(p.getStatusAtual().name());
+        //deonde vem name?
         
         int novo = FLUXO.indexOf(novoStatus.toUpperCase());
         if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
@@ -69,11 +77,18 @@ public class PacoteService {
         }
         
        
-        p.setStatusAtual(StatusAtual.valueOf(novoStatus.toUpperCase()));
-        Pacote salvo = pacoteRepo.save(p);
+        if(novoStatus.equalsIgnoreCase("ENTREGUE")){
+            if(otp == null || !otp.equals(p.getOtpCodigo())){
+                throw new RuntimeException("OTP inválido para entrega");
+            }
+            if(p.getOtpExpira() != null && p.getOtpExpira().isBefore(LocalDateTime.now())){
+                throw new RuntimeException("OTP expirado");
+            }
+        }
         
-        salvarHistorico(salvo.getId(), novoStatus,"Atualizado por" +  );
-        return salvo;
+        //pede para criar variavel salvo
+        salvarHistorico(salvo.getId(), novoStatus.toUpperCase(), "Atualizado por " + perfil);
+        return salvo; 
     }
 
     private void salvarHistorico(

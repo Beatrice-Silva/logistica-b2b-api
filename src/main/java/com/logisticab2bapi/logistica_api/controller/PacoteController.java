@@ -5,7 +5,9 @@
 package com.logisticab2bapi.logistica_api.controller;
 
 import com.logisticab2bapi.logistica_api.model.Pacote;
+import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 import com.logisticab2bapi.logistica_api.service.PacoteService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pacotes")
 @CrossOrigin(origins = "*")
 public class PacoteController {
+    
     @Autowired private PacoteService service;
+    @Autowired private PacoteRepository pacoteRepo;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('OPERADOR','ADMIN')")
@@ -52,5 +56,9 @@ public class PacoteController {
         String emailDoToken = authentication.getName(); //pegar email do token e nao url
         return service.atualizar(id, novo, otp, emailDoToken);
     }
+    
+    @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR','ADMIN')")
+    public List<Pacote> listar(){ return pacoteRepo.findAll(); }
     
 }
