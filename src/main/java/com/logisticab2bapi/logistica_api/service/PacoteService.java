@@ -7,6 +7,7 @@ package com.logisticab2bapi.logistica_api.service;
 //import com.logisticab2bapi.logistica_api.model.OtpTentativaDTO;
 import com.logisticab2bapi.logistica_api.model.Pacote;
 import com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual;
+import static com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual.CRIADO;
 import com.logisticab2bapi.logistica_api.model.StatusHistorico;
 //import com.logisticab2bapi.logistica_api.repository.OtpTentativaRepository;
 import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
@@ -37,17 +38,14 @@ public class PacoteService {
     public Pacote criar(Pacote p){
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
         p.setCodigoRastreio(codigo);
-       
-        /* o erro fala create ENUM constant 
-        em Pacote.statusAtual
-        */        
+        
         //p.setStatusAtual(StatusAtual.CRIADO);
         
-        p.setStatusAtual(StatusAtual.CRIADO); // precisa existir no enum
         
-        Pacote salvo = pacoteRepo.save(p);
+        Pacote salvo = pacoteRepo.save(p); 
+        /*
         salvarHistorico(salvo.getId(), "CRIADO", "Remessa criada");
-        
+        */
         try {
             notificacaoService.enviarEmail(salvo.getEnderecoDestino(), "Criado: " + codigo);
         } catch(Exception e){ System.out.println("Email não enviado: " + e.getMessage()); }
@@ -64,12 +62,10 @@ public class PacoteService {
     public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
         Pacote p = pacoteRepo.findById(id).orElseThrow();
        
-        //ele fala split assignment 
-        int atual = FLUXO.indexOf(p.getStatusAtual().name());
-        //deonde vem name?
+        //int atual = FLUXO.indexOf(p.getStatusAtual().name());
         
         int novo = FLUXO.indexOf(novoStatus.toUpperCase());
-        if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
+        //if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
         
         if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
             p.setOtpCodigo(String.format("%06d", new Random().nextInt(999999)));
@@ -85,10 +81,12 @@ public class PacoteService {
                 throw new RuntimeException("OTP expirado");
             }
         }
-        
-        //pede para criar variavel salvo
-        salvarHistorico(salvo.getId(), novoStatus.toUpperCase(), "Atualizado por " + perfil);
+        /*
+        salvarHistorico(salvo.getId(), novoStatus.toUpperCase(), "Atualizado por " + perfil);             
         return salvo; 
+        */
+        return null;
+        
     }
 
     private void salvarHistorico(
@@ -104,4 +102,6 @@ public class PacoteService {
         h.setDescObserv(obs);
         histRepo.save(h);
     }
+    
+    
 }
