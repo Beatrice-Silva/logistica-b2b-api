@@ -35,8 +35,7 @@ public class Pacote {
     private String enderecoDestino;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_atual")
-    private String statusAtual;
+    private StatusAtual statusAtual;
     
     @Column(name = "otp_codigo")
     private String otpCodigo;
@@ -88,11 +87,11 @@ public class Pacote {
         this.enderecoDestino = enderecoDestino;
     }
 
-    public String getStatusAtual() {
+    public StatusAtual getStatusAtual() {
         return statusAtual;
     }
 
-    public void setStatusAtual(String statusAtual) {
+    public void setStatusAtual(StatusAtual s) {
         this.statusAtual = statusAtual;
     }
 
