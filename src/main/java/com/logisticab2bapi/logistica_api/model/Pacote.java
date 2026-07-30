@@ -35,6 +35,7 @@ public class Pacote {
     private String enderecoDestino;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status_atual")
     private StatusAtual statusAtual;
     
     @Column(name = "otp_codigo")
