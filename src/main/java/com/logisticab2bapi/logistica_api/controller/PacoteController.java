@@ -5,12 +5,13 @@
 package com.logisticab2bapi.logistica_api.controller;
 
 import com.logisticab2bapi.logistica_api.model.Pacote;
-import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
+import com.logisticab2bapi.logistica_api.model.Usuario;
+
 import com.logisticab2bapi.logistica_api.service.PacoteService;
+import com.logisticab2bapi.logistica_api.service.TokenService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +31,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class PacoteController {
     
     @Autowired private PacoteService service;
+    
+    @Autowired 
+    private TokenService tokenService;
 
     @PostMapping
-    public String criar(@RequestHeader("Authorization") String auth, @RequestBody Pacote pacote){
+    public String criarPacote(
+            @RequestHeader("Authorization") String auth, 
+            @RequestBody Pacote pacote){
+        
         String token = auth.replace("Bearer ", "");
-        //service.criar(pacote, token);
+        Usuario usuarioLogado = tokenService.extrairClaim(token);
+        service.novoPacote(pacote, usuarioLogado);
         return "Pacote cadastrado!";
     }
 

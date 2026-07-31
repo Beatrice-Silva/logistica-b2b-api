@@ -6,6 +6,7 @@ package com.logisticab2bapi.logistica_api.service;
 
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -61,4 +62,22 @@ public class TokenService {
         u.setPerfilRole(Usuario.PerfilRole.valueOf(claims.get("role", String.class)));
         return u;
     }
+    
+      public boolean validarToken(String token) {
+        try {
+            // Cria um parser JWT com a chave secreta para validação
+            Jwts.parser()
+                    .setSigningKey(getKeySign())
+                    .build()
+                    // Analisa e valida o token (lança exceção se inválido ou expirado)
+                    .parseClaimsJws(token);
+            // Se chegou aqui, o token é válido
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            // Se qualquer exceção ocorrer, o token é inválido ou expirou
+            return false;
+        }
+    }
+    
+    
 }
