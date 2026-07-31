@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface LojaRepository extends JpaRepository<Loja, Long> {
     
     //Nao deixar cpnj ser duplicado quando cadastrado
-    Optional<Loja> fingByCnpj(String cnpj);
+    Optional<Loja> findByCnpj(String cnpj);
     
     List<Loja> findByAtivoTrue();
     //Listar lojas apenas ativas para quando criar remessa
