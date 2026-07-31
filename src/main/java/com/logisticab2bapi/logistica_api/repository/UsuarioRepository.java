@@ -19,11 +19,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     
     Optional<Usuario> findByEmail(String email);
     
-    List<Usuario> findByRole(enum PerfilRole = "ADMIN");
-    
-    List<Usuario> findByRole(enum PerfilRole = "ENTREGADOR");
-    
-    List<Usuario> findByRole(enum PerfilRole = "OPERADOR");
-    
+    List<Usuario> findByPerfilRole(Usuario.PerfilRole perfilRole);
+
     boolean existsByEmail(String email);
     }

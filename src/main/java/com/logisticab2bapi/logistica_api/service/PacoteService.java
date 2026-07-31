@@ -21,8 +21,10 @@ public class PacoteService {
     
     @Autowired 
     private PacoteRepository pacoteRepo;
+    
     @Autowired 
     private StatusHistoricoRepository histRepo;
+    
     @Autowired
     private NotificacaoService notificacaoService;
     
@@ -55,8 +57,7 @@ public class PacoteService {
     public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
         Pacote p = pacoteRepo.findById(id).orElseThrow();
        
-        int atual = FLUXO.indexOf(p.getStatusAtual().name());
-        //int atual = FLUXO.indexOf(p.getStatusAtual().name);
+        int atual = FLUXO.indexOf(p.getStatusAtual().name()); 
         
         int novo = FLUXO.indexOf(novoStatus.toUpperCase());
         if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
@@ -78,8 +79,6 @@ public class PacoteService {
         Pacote salvo = pacoteRepo.save(p);
         salvarHistorico(salvo.getId(), novoStatus.toUpperCase(),salvo.getIdLoja(),"Atualizado por " + perfil);             
         return salvo; 
-        
-        
         
     }
 

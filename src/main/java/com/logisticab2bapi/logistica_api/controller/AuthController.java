@@ -21,31 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author BEATRICE
  */
-
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
 public class AuthController {
-    
-    @Autowired 
-    private UsuarioService usuarioService;//instancia
-    @Autowired 
-    private TokenService tokenService;
-
-    @PostMapping("/login")
-    
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody Map<String,String> login){
-        
-        Usuario u = usuarioService.validarLogin(login.get("email"), login.get("senha"));
-        
-        String token = tokenService.gerarToken();
-        return ResponseEntity.ok(new AuthResponseDTO(token, u.getPerfilRole().name(), u.getEmail()));
-    }
+    @Autowired private UsuarioService service;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrar(@RequestBody Usuario user){
-        usuarioService.register(user);
-        return ResponseEntity.ok("Cadastro feito com sucesso");
+    public String registrar(@RequestBody Usuario user) {
+        service.registrar(user);
+        return "Cadastro Feito com sucesso!";
+    }
+
+    @PostMapping("/logar")
+    public String login(@RequestBody Map<String,String> user) {
+        return service.login(user.get("email"), user.get("senha"));
     }
 }
      

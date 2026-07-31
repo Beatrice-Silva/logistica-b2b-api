@@ -4,14 +4,17 @@
  */
 package com.logisticab2bapi.logistica_api.service;
 
-import io.jsonwebtoken.JwtException;
+import com.logisticab2bapi.logistica_api.model.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -19,36 +22,43 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TokenService {
-    
-    //chave utilizada para assinar e validat tokens Jwt
     @Value("${api.security.token.secret}")
     private String secret;
-    
-    private SecretKey getSignKey(){
+
+    public SecretKey getKeySign() {
         byte[] keyBytes = Decoders.BASE64.decode(this.secret);
         return Keys.hmacShaKeyFor(keyBytes);
-        
     }
-    
-    public String gerarToken() {
-        return Jwts.builder()
-                .subject("usuario.teste@teste.com") //identificador do usuário
-                .issuedAt(new Date())// Define quando o token foi criado
-                .expiration(new Date(System.currentTimeMillis() + 300000)) //5 min do teste
-                .signWith(getSignKey())//assina o token com a chave secreta HMAC-SHA
-                .compact();// Converte o token construído para a sua forma compacta (String)
-    }
-    
-    //com usuario do banco
-    public boolean validarToken(String token) {
-        try {
-            Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token);
-            // Se chegou aqui, o token é válido
-            return true;
-        } catch (Exception e) {
-            //se exceção ocorre, o token esta inválido ou expirado
-            return false;
+
+    // igual ao seu gerarToken(UserDTO) só que com Usuario
+    public String gerarToken(Usuario user) {
+        if(user.getId() == null || user.getEmail().equals("") || user.getPerfilRole() == null) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Um ou mais campos faltantes");
         }
+
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .claim("id", user.getId())
+                .claim("email", user.getEmail())
+                .claim("role", user.getPerfilRole().name())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1h
+                .signWith(this.getKeySign())
+                .compact();
     }
-    
+
+    // igual ao seu extrairClaim
+    public Usuario extrairClaim(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(this.getKeySign())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        Usuario u = new Usuario();
+        u.setId(claims.get("id", Long.class));
+        u.setEmail(claims.get("email", String.class));
+        u.setPerfilRole(Usuario.PerfilRole.valueOf(claims.get("role", String.class)));
+        return u;
+    }
 }
