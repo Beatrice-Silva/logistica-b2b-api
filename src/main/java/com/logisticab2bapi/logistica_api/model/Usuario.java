@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -107,8 +108,9 @@ public class Usuario {
         return criadoEm;
     }
 
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
+    @PrePersist
+    public void setCriadoEm() {
+        if(criadoEm == null) criadoEm = LocalDateTime.now();
     }
     
     

@@ -48,8 +48,4 @@ public class UsuarioService {
     
         return tokenService.gerarToken(usuario);
     }
-
-    
-    public Usuario criar(Usuario u){ registrar(u); return u; }
-    public String logar(String email, String senha){ return login(email, senha); }
 }

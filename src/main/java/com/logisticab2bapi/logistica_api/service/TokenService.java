@@ -31,7 +31,7 @@ public class TokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // igual ao seu gerarToken(UserDTO) só que com Usuario
+    
     public String gerarToken(Usuario user) {
         if(user.getId() == null || user.getEmail().equals("") || user.getPerfilRole() == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Um ou mais campos faltantes");
