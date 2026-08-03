@@ -23,14 +23,11 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     
     //Contagem de quantos em cada status no dashboard
     long countByStatusAtual(StatusAtual statusAtual);
-    
-    int novoPacote(Pacote pacote);
-   
+
     //Lista por id especifico
     List<Pacote> findByIdLoja(Long idLoja);
     
     //listagem geral
-    List<Pacote> listarPacote(Long idPacote);
     
     
     

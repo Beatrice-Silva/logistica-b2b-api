@@ -59,34 +59,27 @@ public class PacoteService {
             
         }
         
-        
-        int rows = pacoteRepo.novoPacote(p);
-        if(rows == 0){
-            throw new  ResponseStatusException(HttpStatusCode.valueOf(500), 
-            "Erro ao criar Pacote...");
-        }
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
+        
         p.setCodigoRastreio(codigo);
         p.setStatusAtual(StatusAtual.CRIADO);
-        Pacote salvo = pacoteRepo.save(p); 
+        
+        Pacote salvo = pacoteRepo.save(p);
         salvarHistorico(salvo.getId(), "CRIADO", salvo.getIdLoja(), "Remessa criada");
         
+        
         try {
-            notificacaoService.enviarEmail(salvo.getEnderecoDestino(), "Criado: " + codigo);
+            notificacaoService.enviarEmail(
+                    salvo.getEnderecoDestino(), 
+                    "Criado: " + codigo);
         } catch(Exception e){ System.out.println("Email não enviado: " + e.getMessage()); }
         
         return salvo;
     }
     
-    public List<Pacote> listarPacote(String authHeader){
-        
-        if(tokenService.validarToken(authHeader)){
-            return pacoteRepo.listarPacote(Long.MIN_VALUE);
-        }else{
-           throw new  ResponseStatusException(HttpStatusCode.valueOf(401), 
-            "Token inválido!"); 
-        }
-        
+    public List<Pacote> listarPacote(String token){
+        Usuario logado = tokenService.extrairClaim(token);
+        return pacoteRepo.findAll();
     }
 
     public Pacote buscarPorCodigo(String codigo){

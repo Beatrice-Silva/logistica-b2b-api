@@ -61,8 +61,7 @@ public class PacoteController {
     @GetMapping
     public List<Pacote> listar(@RequestHeader("Authorization") String auth){ 
         String token = auth.replace("Bearer ", "");
-        //return service.listarTodos(token);
-        return null;
+        return service.listarPacote(token);
     }
     
 }
