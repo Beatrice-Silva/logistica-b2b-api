@@ -28,7 +28,7 @@ public class PacoteService {
     @Autowired private TokenService tokenService;
     
     private final List<String> FLUXO = 
-            List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE");
+            List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE","ARQUIVADO");
 
     public Pacote novoPacote(Pacote p, Usuario usuarioLogado){//adicionar token
         String message = "";
