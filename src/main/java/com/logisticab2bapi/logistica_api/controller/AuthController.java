@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author BEATRICE
  */
+//Api testes funcionaram
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -26,7 +27,7 @@ public class AuthController {
     @PostMapping("/registrar")
     public String registrar(@RequestBody Usuario user) {
         service.registrar(user);
-        return "Cadastro Feito com sucesso!";
+        return "Cadastro feito com sucesso!";
     }
 
     @PostMapping("/logar")

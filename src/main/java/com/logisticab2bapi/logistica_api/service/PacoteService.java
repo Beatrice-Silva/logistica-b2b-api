@@ -24,7 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class PacoteService {
     
-    @Autowired private PacoteRepository pacoteRepo;
+    @Autowired 
+    private PacoteRepository pacoteRepo;
+    
     @Autowired private StatusHistoricoRepository histRepo;
     @Autowired private NotificacaoService notificacaoService;
     @Autowired private TokenService tokenService;
@@ -35,11 +37,13 @@ public class PacoteService {
     public Pacote novoPacote(Pacote p, Usuario usuarioLogado){//adicionar token
         String message = "";
         
-        if(!usuarioLogado.getPerfilRole().equals("OPERADOR")){
+        if(usuarioLogado.getPerfilRole().equals("ENTREGADOR")){
             throw new  ResponseStatusException(HttpStatusCode.valueOf(403),
                     "Acesso negado: apenas Operadores conseguem criar novos pacotes"
             );
         }
+        
+        //erro de Null
         
         if(p.getCodigoRastreio().isEmpty()){
             message += "Código de Rastreio não preenchido!";
@@ -69,7 +73,7 @@ public class PacoteService {
         Pacote salvo = pacoteRepo.save(p);
         salvarHistorico(salvo.getId(), "CRIADO", salvo.getIdLoja(), "Remessa criada");
         
-        
+        //Conta cadastrada nao pode conter horario 0 de registro = erro
         try {
             notificacaoService.enviarEmail(
                     salvo.getEnderecoDestino(), 
@@ -118,7 +122,7 @@ public class PacoteService {
         return salvo; 
         
     }
-
+    
     private void salvarHistorico(
             Long idPacote, 
             String status, 
@@ -132,8 +136,8 @@ public class PacoteService {
         h.setDescObserv(obs);
         histRepo.save(h);
     }
-    
-    
+   
+    /*
    public Map<String, Long> getCounts(String token) {//repo direto
     List<Object[]> resultados = pacoteRepo.contarPorStatus();
     Map<String, Long> map = new HashMap<>();
@@ -151,7 +155,7 @@ public class PacoteService {
     }
     return map;
 } 
-    
+  */  
     
     
 }

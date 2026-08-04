@@ -26,6 +26,7 @@ public class UsuarioService {
         if(user.getPerfilRole() == null) {
          
             user.setPerfilRole(Usuario.PerfilRole.OPERADOR);
+            
         }
         repository.save(user);
     }

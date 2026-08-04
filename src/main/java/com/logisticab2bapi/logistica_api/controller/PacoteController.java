@@ -26,16 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author BEATRICE
  */ 
+//Api testes
 @RestController
 @RequestMapping("/api/pacotes")
 public class PacoteController {
     
-    @Autowired private PacoteService service;
+    @Autowired 
+    private PacoteService service;
     
     @Autowired 
     private TokenService tokenService;
 
-    @PostMapping
+    @PostMapping("/registrar")
     public String criarPacote(
             @RequestHeader("Authorization") String auth, 
             @RequestBody Pacote pacote){
@@ -43,7 +45,7 @@ public class PacoteController {
         String token = auth.replace("Bearer ", "");
         Usuario usuarioLogado = tokenService.extrairClaim(token);
         service.novoPacote(pacote, usuarioLogado);
-        return "Pacote cadastrado!";
+        return "Pacote cadastrado com sucesso!";
     }
 
     @GetMapping("/{codigo}")
@@ -63,5 +65,6 @@ public class PacoteController {
         String token = auth.replace("Bearer ", "");
         return service.listarPacote(token);
     }
+    
     
 }

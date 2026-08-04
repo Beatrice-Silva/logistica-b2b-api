@@ -4,11 +4,12 @@
  */
 package com.logisticab2bapi.logistica_api.controller;
 
+/**
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
+
  * TesteController - Controlador REST para testes de geração e validação de tokens JWT
  *
  * @author BEATRICE

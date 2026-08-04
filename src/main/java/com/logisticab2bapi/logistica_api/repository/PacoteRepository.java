@@ -27,8 +27,8 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
 
     //Lista por id especifico
     List<Pacote> findByIdLoja(Long idLoja);
-    
-//pacote com loja 
+    /*
+    //pacote com loja 
     @Query("SELECT p FROM Pacote p JOIN FETCH p.loja")
     List<Pacote> findAllComLoja();
     
@@ -39,11 +39,11 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     @Query("SELECT p.status_atual as status,\n" +
     " COUNT(p) as total FROM Pacotes  p GROUP BY p.status_atual;")
     List<Object[]> contarPorStatus();
-    
+
     @Query("SELECT l.nomeEstabelecimento as loja, COUNT(p) as total FROM Pacote p JOIN p.loja l GROUP BY l.nomeEstabelecimento")
     List<Object[]> contarPorLoja();
-    
-    
+        
+   */
     
     
     
