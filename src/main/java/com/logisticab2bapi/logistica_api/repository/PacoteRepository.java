@@ -9,6 +9,7 @@ import com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,8 +28,17 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     //Lista por id especifico
     List<Pacote> findByIdLoja(Long idLoja);
     
-    //listagem geral
+//pacote com loja 
+    @Query("SELECT p FROM Pacote p JOIN FETCH p.loja")
+    List<Pacote> findAllComLoja();
     
+    //SELECT p.codigo_rastreio, l.nome_estabelecimento
+    //FROM pacotes p INNER JOIN lojas l ON p.id_loja = l.id;
+    
+    
+    @Query("SELECT p.status_atual as status,\n" +
+" COUNT(p) as total FROM Pacotes  p GROUP BY p.status_atual;")
+    List<Object[]> contarPorStatus();
     
     
     

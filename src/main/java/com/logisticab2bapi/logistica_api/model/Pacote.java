@@ -53,7 +53,8 @@ public class Pacote {
         COLETADO, //operador coleta
         EM_TRANSITO, //com entregador
         ENTREGUE, //Com OTP valido
-        DEVOLVIDO
+        DEVOLVIDO,
+        ARQUIVADO
     }
 
     public Long getId() {

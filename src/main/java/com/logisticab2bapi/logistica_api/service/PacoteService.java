@@ -12,7 +12,9 @@ import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 import com.logisticab2bapi.logistica_api.repository.StatusHistoricoRepository;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -131,6 +133,24 @@ public class PacoteService {
         histRepo.save(h);
     }
     
+    
+   public Map<String, Long> getCounts(String token) {//repo direto
+    List<Object[]> resultados = pacoteRepo.contarPorStatus();
+    Map<String, Long> map = new HashMap<>();
+    map.put("CRIADO", 0L);
+    map.put("COLETADO", 0L);
+    map.put("EM_TRANSITO", 0L);
+    map.put("ENTREGUE", 0L);
+    map.put("DEVOLVIDO", 0L);
+    map.put("ARQUIVADO", 0L);
+
+    for(Object[] row : resultados) {
+        String status = row[0].toString(); //tipos dos status
+        Long total = (Long) row[1];
+        map.put(status, total);
+    }
+    return map;
+} 
     
     
     
