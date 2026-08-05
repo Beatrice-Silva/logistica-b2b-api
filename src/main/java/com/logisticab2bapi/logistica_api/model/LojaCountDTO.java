@@ -18,8 +18,6 @@ public class LojaCountDTO {
         this.total = total;
     }
     
-    
-    
     private String nomeLoja;
     private Long total;
 

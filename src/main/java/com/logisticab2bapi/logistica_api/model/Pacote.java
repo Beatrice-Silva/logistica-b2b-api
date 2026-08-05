@@ -10,6 +10,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,26 +26,27 @@ public class Pacote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "codigo_rastreio", unique = true)
+    //@Column(name = "codigo_rastreio", unique = true)
     private String codigoRastreio;
 
-    @Column(name = "id_loja")
-    private Long idLoja;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_loja")
+    private Loja loja;
     
-    @Column(name = "endereco_destino")
+    //@Column(name = "endereco_destino")
     private String enderecoDestino;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_atual")
+    //@Column(name = "status_atual")
     private StatusAtual statusAtual;
     
-    @Column(name = "otp_codigo")
+    //@Column(name = "otp_codigo")
     private String otpCodigo;
 
-    @Column(name = "otp_expira")
+   // @Column(name = "otp_expira")
     private LocalDateTime otpExpira;
     
-    @Column(name = "desc_observ")
+    //@Column(name = "desc_observ")
     private String descObserv;
 
     //opcoes limitadas de status
@@ -73,12 +75,12 @@ public class Pacote {
         this.codigoRastreio = codigoRastreio;
     }
 
-    public Long getIdLoja() {
-        return idLoja;
+    public Loja getLoja() {
+        return loja;
     }
 
-    public void setIdLoja(Long idLoja) {
-        this.idLoja = idLoja;
+    public void setLoja(Loja loja) {
+        this.loja = loja;
     }
 
     public String getEnderecoDestino() {

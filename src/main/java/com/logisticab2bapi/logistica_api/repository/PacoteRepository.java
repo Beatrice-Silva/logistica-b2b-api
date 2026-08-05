@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author BEATRICE
  */
-@Repository //repo ->
+@Repository //repo 
 public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     
     //consulta publica do destinatario
@@ -25,27 +25,14 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     //Contagem de quantos em cada status no dashboard
     long countByStatusAtual(StatusAtual statusAtual);
 
-    //Lista por id especifico
-    List<Pacote> findByIdLoja(Long idLoja);
-    /*
-    //pacote com loja 
-    @Query("SELECT p FROM Pacote p JOIN FETCH p.loja")
-    List<Pacote> findAllComLoja();
     
-    //SELECT p.codigo_rastreio, l.nome_estabelecimento
-    //FROM pacotes p INNER JOIN lojas l ON p.id_loja = l.id;
-    
-    
-    @Query("SELECT p.status_atual as status,\n" +
-    " COUNT(p) as total FROM Pacotes  p GROUP BY p.status_atual;")
+    //dashboard 
+    @Query(value = "SELECT status_atual, COUNT(*) FROM pacotes GROUP BY status_atual", nativeQuery = true)
     List<Object[]> contarPorStatus();
-
-    @Query("SELECT l.nomeEstabelecimento as loja, COUNT(p) as total FROM Pacote p JOIN p.loja l GROUP BY l.nomeEstabelecimento")
-    List<Object[]> contarPorLoja();
-        
-   */
     
-    
+    @Query(value = "SELECT l.nome, COUNT(p.id) FROM pacotes p INNER JOIN lojas l ON p.id_loja = l.id GROUP BY l.nome", nativeQuery = true)
+    List<Object[]> contarPorLoja();   
+   
     
     
 }

@@ -4,12 +4,17 @@
  */
 package com.logisticab2bapi.logistica_api.controller;
 
+import com.logisticab2bapi.logistica_api.model.LojaCountDTO;
 import com.logisticab2bapi.logistica_api.model.Pacote;
 import com.logisticab2bapi.logistica_api.model.Usuario;
+import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 
 import com.logisticab2bapi.logistica_api.service.PacoteService;
 import com.logisticab2bapi.logistica_api.service.TokenService;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +38,11 @@ public class PacoteController {
     
     @Autowired 
     private PacoteService service;
-    
+    @Autowired 
+    private PacoteRepository repo;
     @Autowired 
     private TokenService tokenService;
+    
 
     @PostMapping("/registrar")
     public String criarPacote(
@@ -53,6 +60,25 @@ public class PacoteController {
         return service.buscarPorCodigo(codigo); 
     }
 
+    
+    @GetMapping("/estatisticas")
+    public Map<String, Long> estatisticas(){
+        Map<String, Long> map = new HashMap<>();
+        for(Object[] row : repo.contarPorStatus()){
+            map.put(row[0].toString(), ((Number)row[1]).longValue());
+        }
+        return map;
+    }
+    
+    @GetMapping("/por-loja")
+    public List<LojaCountDTO> porLoja(){
+        List<LojaCountDTO> lista = new ArrayList<>();
+        for(Object[] row : repo.contarPorLoja()){
+            lista.add(new LojaCountDTO((String)row[0], ((Number)row[1]).longValue()));
+        }
+        return lista;
+    }
+    
     @PutMapping("/{id}/status")
     public String status(@RequestHeader("Authorization") String auth, @PathVariable Long id, @RequestParam String novo, @RequestParam(required = false) String otp){
         String token = auth.replace("Bearer ", "");

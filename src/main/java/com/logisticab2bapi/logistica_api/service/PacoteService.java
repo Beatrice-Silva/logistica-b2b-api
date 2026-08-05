@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.logisticab2bapi.logistica_api.service;
+import com.logisticab2bapi.logistica_api.model.Loja;
 import com.logisticab2bapi.logistica_api.model.Pacote;
 import com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual;
 import static com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual.CRIADO;
 import com.logisticab2bapi.logistica_api.model.StatusHistorico;
 import com.logisticab2bapi.logistica_api.model.Usuario;
+import com.logisticab2bapi.logistica_api.model.Usuario.PerfilRole;
+import com.logisticab2bapi.logistica_api.repository.LojaRepository;
 import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 import com.logisticab2bapi.logistica_api.repository.StatusHistoricoRepository;
 import java.time.LocalDateTime;
@@ -17,71 +17,56 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-@Service
+@Service 
 public class PacoteService {
     
     @Autowired 
     private PacoteRepository pacoteRepo;
     
     @Autowired private StatusHistoricoRepository histRepo;
+    @Autowired private LojaRepository lojaRepo;
     @Autowired private NotificacaoService notificacaoService;
     @Autowired private TokenService tokenService;
     
     private final List<String> FLUXO = 
             List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE","ARQUIVADO");
 
-    public Pacote novoPacote(Pacote p, Usuario usuarioLogado){//adicionar token
-        String message = "";
-        
-        if(usuarioLogado.getPerfilRole().equals("ENTREGADOR")){
-            throw new  ResponseStatusException(HttpStatusCode.valueOf(403),
-                    "Acesso negado: apenas Operadores conseguem criar novos pacotes"
-            );
+        public Pacote novoPacote(Pacote p, Usuario usuarioLogado){
+        if(usuarioLogado.getPerfilRole()!= PerfilRole.OPERADOR && usuarioLogado.getPerfilRole()!= PerfilRole.ADMIN){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado: apenas Operadores");
         }
-        
-        //erro de Null
-        
-        if(p.getCodigoRastreio().isEmpty()){
-            message += "Código de Rastreio não preenchido!";
+        if(p.getLoja() == null || p.getLoja().getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Loja obrigatória");
         }
-        if(p.getDescObserv().isEmpty()){
-            message += "Descrição/Observação não preenchido!";
+        // valida sem dar NullPointer
+        if(p.getEnderecoDestino() == null || p.getEnderecoDestino().isBlank()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Endereço do destino não preenchido!");
         }
-        if(p.getEnderecoDestino().isEmpty()){
-            message += "Endereço do destino não preenchido!";
-        }
-        if(p.getOtpCodigo().isEmpty()){
-            message += "Código OTP não preenchido!";
-        }
-        if(!p.getStatusAtual().equals(CRIADO)){
-            message += "É preciso que o status siga as etapas uma por vez";
-        }
-        if(!message.isEmpty()){
-            throw new  ResponseStatusException(HttpStatusCode.valueOf(400), message);
-            
-        }
-        
+
+        Loja lojaReal = lojaRepo.findById(p.getLoja().getId()).orElseThrow(() -> new RuntimeException("Loja não encontrada"));
+        p.setLoja(lojaReal);
+
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
         
         p.setCodigoRastreio(codigo);
-        p.setStatusAtual(StatusAtual.CRIADO);
-        
+        p.setStatusAtual(Pacote.StatusAtual.CRIADO);
+
         Pacote salvo = pacoteRepo.save(p);
-        salvarHistorico(salvo.getId(), "CRIADO", salvo.getIdLoja(), "Remessa criada");
+        salvarHistorico(salvo.getId(), "CRIADO", salvo.getLoja().getId(), "Remessa criada");
         
-        //Conta cadastrada nao pode conter horario 0 de registro = erro
-        try {
-            notificacaoService.enviarEmail(
-                    salvo.getEnderecoDestino(), 
-                    "Criado: " + codigo);
-        } catch(Exception e){ System.out.println("Email não enviado: " + e.getMessage()); }
-        
-        return salvo;
+    try {
+        notificacaoService.enviarEmail("log@teste.com", "Criado: " + codigo);
+    } catch(Exception e){
+        System.out.println("Email não enviado: " + e.getMessage());
     }
+    
+    return salvo;
+    }   
     
     public List<Pacote> listarPacote(String token){
         Usuario logado = tokenService.extrairClaim(token);
@@ -118,7 +103,7 @@ public class PacoteService {
             }
         }
         Pacote salvo = pacoteRepo.save(p);
-        salvarHistorico(salvo.getId(), novoStatus.toUpperCase(),salvo.getIdLoja(),"Atualizado por " + perfil);             
+        salvarHistorico(salvo.getId(), novoStatus.toUpperCase(),salvo.getLoja().getId(),"Atualizado por " + perfil);             
         return salvo; 
         
     }
@@ -158,4 +143,7 @@ public class PacoteService {
   */  
     
     
+    
+    
 }
+
