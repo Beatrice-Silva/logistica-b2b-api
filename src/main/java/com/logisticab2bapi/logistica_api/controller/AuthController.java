@@ -34,6 +34,8 @@ public class AuthController {
     public String login(@RequestBody Map<String,String> user) {
         return service.login(user.get("email"), user.get("senha"));
     }
+    
+    
 }
      
 
