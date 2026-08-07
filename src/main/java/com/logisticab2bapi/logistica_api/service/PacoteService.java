@@ -2,8 +2,6 @@
 package com.logisticab2bapi.logistica_api.service;
 import com.logisticab2bapi.logistica_api.model.Loja;
 import com.logisticab2bapi.logistica_api.model.Pacote;
-import com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual;
-import static com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual.CRIADO;
 import com.logisticab2bapi.logistica_api.model.StatusHistorico;
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.model.Usuario.PerfilRole;
@@ -12,13 +10,13 @@ import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 import com.logisticab2bapi.logistica_api.repository.StatusHistoricoRepository;
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +30,7 @@ public class PacoteService {
     @Autowired private LojaRepository lojaRepo;
     @Autowired private NotificacaoService notificacaoService;
     @Autowired private TokenService tokenService;
+    @Autowired private MailService mailService;
     
     private final List<String> FLUXO = 
             List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE","ARQUIVADO");
@@ -46,6 +45,9 @@ public class PacoteService {
         // valida sem dar NullPointer
         if(p.getEnderecoDestino() == null || p.getEnderecoDestino().isBlank()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Endereço do destino não preenchido!");
+        }
+        if(p.getEmailDestinatario() == null || p.getEmailDestinatario().isBlank()){
+        p.setEmailDestinatario(loja.getContatoEmail());
         }
 
         Loja lojaReal = lojaRepo.findById(p.getLoja().getId()).orElseThrow(() -> new RuntimeException("Loja não encontrada"));
@@ -89,6 +91,8 @@ public class PacoteService {
         if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
         
         if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
+            mailService.sendOtp(p.getEmailDestinatario());
+            p.setStatusAtual(Pacote.StatusAtual.valueOf(novoStatus.toUpperCase()));
             p.setOtpCodigo(String.format("%06d", new Random().nextInt(999999)));
             p.setOtpExpira(LocalDateTime.now().plusHours(24));
         }

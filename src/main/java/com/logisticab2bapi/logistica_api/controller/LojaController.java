@@ -44,7 +44,7 @@ public class LojaController{
     public List<Loja> listar(@RequestHeader("Authorization") String auth){
         String token = auth.replace("Bearer ", "");
         Usuario logado = tokenService.extrairClaim(token);
-        if(logado.getPerfilRole() == PerfilRole.ADMIN){
+        if(logado.getPerfilRole() == Usuario.PerfilRole.ADMIN){
             return repo.findAll();
         }
         return repo.findByIdUsuario(logado.getId());
