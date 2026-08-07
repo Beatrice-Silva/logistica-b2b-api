@@ -52,7 +52,7 @@ public class LojaController{
 
     @GetMapping("/ativas")
     public List<Loja> listarAtivas(){
-        return repo.findByAtivoTrue();
+        return repo.findByAtivoTrue(true);
     }
     
 }

@@ -42,12 +42,11 @@ public class PacoteService {
         if(p.getLoja() == null || p.getLoja().getId() == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Loja obrigatória");
         }
-        // valida sem dar NullPointer
+     
         if(p.getEnderecoDestino() == null || p.getEnderecoDestino().isBlank()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Endereço do destino não preenchido!");
         }
         if(p.getEmailDestinatario() == null || p.getEmailDestinatario().isBlank()){
-        p.setEmailDestinatario(loja.getContatoEmail());
         }
 
         Loja lojaReal = lojaRepo.findById(p.getLoja().getId()).orElseThrow(() -> new RuntimeException("Loja não encontrada"));

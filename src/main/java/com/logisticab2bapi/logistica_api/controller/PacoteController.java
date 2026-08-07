@@ -86,7 +86,7 @@ public class PacoteController {
         return "Status atualizado!";
     }
     
-    @GetMapping
+    @GetMapping("/listagem")
     public List<Pacote> listar(@RequestHeader("Authorization") String auth){ 
         String token = auth.replace("Bearer ", "");
         return service.listarPacote(token);

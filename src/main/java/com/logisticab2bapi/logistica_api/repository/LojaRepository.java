@@ -20,16 +20,14 @@ public interface LojaRepository extends JpaRepository<Loja, Long> {
     //Nao deixar cpnj ser duplicado quando cadastrado
     Optional<Loja> findByCnpj(String cnpj);
     
-    List<Loja> findByAtivoTrue();
+    List<Loja> findByAtivoTrue(boolean ativo);
     //Listar lojas apenas ativas para quando criar remessa
     
     List<Loja> findByIdUsuario(Long idUsuario);
-    
     //Long listarLoja(Loja loja);
     
     
-    
-    
+ 
     
     
     
