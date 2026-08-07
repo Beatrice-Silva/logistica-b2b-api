@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `db_logisticab2b` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+CREATE DATABASE  IF NOT EXISTS `db_logisticab2b` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `db_logisticab2b`;
--- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: db_logisticab2b
+-- Host: localhost    Database: db_logisticab2b
 -- ------------------------------------------------------
--- Server version	5.5.5-10.4.32-MariaDB
+-- Server version	8.0.46
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,15 +25,15 @@ DROP TABLE IF EXISTS `lojas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lojas` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `nome_estabelecimento` varchar(255) DEFAULT NULL,
-  `cnpj` varchar(255) DEFAULT NULL,
-  `id_usuario` bigint(20) NOT NULL,
-  `contato_email` varchar(255) DEFAULT NULL,
-  `cidade` varchar(255) DEFAULT NULL,
-  `endereco` varchar(255) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `nome_estabelecimento` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cnpj` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_usuario` bigint NOT NULL,
+  `contato_email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cidade` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `endereco` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ativo` bit(1) DEFAULT NULL,
-  `codigo_lon` varchar(255) DEFAULT NULL,
+  `codigo_lon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `cnpj` (`cnpj`),
   KEY `id_usuario` (`id_usuario`),
@@ -59,17 +59,18 @@ DROP TABLE IF EXISTS `pacotes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pacotes` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `codigo_lon` varchar(30) NOT NULL,
-  `otp_codigo` varchar(255) DEFAULT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `codigo_lon` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `otp_codigo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `otp_expira` datetime DEFAULT NULL,
-  `id_loja` bigint(20) NOT NULL,
-  `endereco` varchar(100) NOT NULL,
-  `status_atual` enum('CRIADO','COLETADO','EM_TRANSITO','ENTREGUE','DEVOLVIDO','ARQUIVADO') DEFAULT 'CRIADO',
+  `id_loja` bigint NOT NULL,
+  `endereco` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_atual` enum('CRIADO','COLETADO','EM_TRANSITO','ENTREGUE','DEVOLVIDO','ARQUIVADO') COLLATE utf8mb4_unicode_ci DEFAULT 'CRIADO',
   `peso` double NOT NULL,
-  `desc_observ` varchar(255) DEFAULT NULL,
-  `codigo_rastreio` varchar(255) DEFAULT NULL,
-  `endereco_destino` varchar(255) DEFAULT NULL,
+  `desc_observ` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codigo_rastreio` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `endereco_destino` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_destinatario` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `codigo_lon` (`codigo_lon`),
   UNIQUE KEY `UK9d6ixdppn62pd2dloo6jv6n58` (`codigo_rastreio`),
@@ -84,7 +85,7 @@ CREATE TABLE `pacotes` (
 
 LOCK TABLES `pacotes` WRITE;
 /*!40000 ALTER TABLE `pacotes` DISABLE KEYS */;
-INSERT INTO `pacotes` VALUES (1,'LON2026001',NULL,NULL,1,'Rua Tupi, 123 - Londrina','CRIADO',2.5,'Fragil',NULL,NULL),(2,'LON2026002',NULL,NULL,1,'Av. Maringa, 456 - Londrina','COLETADO',1.2,NULL,NULL,NULL),(3,'LON2026003',NULL,NULL,2,'Rua Goias, 789 - Cambe','',5,'Urgente',NULL,NULL),(4,'LON2026004',NULL,NULL,3,'Rua Sao Paulo, 321 - Londrina','ENTREGUE',0.8,'Deixar portaria',NULL,NULL),(5,'LON2026005',NULL,NULL,2,'Av. Tiradentes, 654 - Ibipora','DEVOLVIDO',3.3,'Ausente',NULL,NULL);
+INSERT INTO `pacotes` VALUES (1,'LON2026001',NULL,NULL,1,'Rua Tupi, 123 - Londrina','CRIADO',2.5,'Fragil',NULL,NULL,NULL),(2,'LON2026002',NULL,NULL,1,'Av. Maringa, 456 - Londrina','COLETADO',1.2,NULL,NULL,NULL,NULL),(3,'LON2026003',NULL,NULL,2,'Rua Goias, 789 - Cambe','CRIADO',5,'Urgente',NULL,NULL,NULL),(4,'LON2026004',NULL,NULL,3,'Rua Sao Paulo, 321 - Londrina','ENTREGUE',0.8,'Deixar portaria',NULL,NULL,NULL),(5,'LON2026005',NULL,NULL,2,'Av. Tiradentes, 654 - Ibipora','DEVOLVIDO',3.3,'Ausente',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `pacotes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,12 +97,12 @@ DROP TABLE IF EXISTS `status_historico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `status_historico` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `id_pacote` bigint(20) NOT NULL,
-  `status` varchar(255) DEFAULT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id_pacote` bigint NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `data_hora` datetime NOT NULL,
-  `desc_observ` varchar(255) DEFAULT NULL,
-  `id_usuario` bigint(20) NOT NULL,
+  `desc_observ` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_usuario` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `status_historico_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
@@ -126,16 +127,16 @@ DROP TABLE IF EXISTS `usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuarios` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `senha` varchar(255) DEFAULT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `senha` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bloqueado_ate` datetime(6) DEFAULT NULL,
   `criado_em` datetime(6) DEFAULT NULL,
-  `perfil_role` enum('ADMIN','ENTREGADOR','OPERADOR') DEFAULT NULL,
-  `tentativas_otp` int(11) DEFAULT NULL,
+  `perfil_role` enum('ADMIN','ENTREGADOR','OPERADOR') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tentativas_otp` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +145,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Admin Sistema','admin@log.com','admin123',NULL,NULL,NULL,NULL),(2,'Carlos Silva','carlos@loja.com','loja123',NULL,NULL,NULL,NULL),(3,'Ana Souza','ana@entrega.com','ana123',NULL,NULL,NULL,NULL),(4,'Marcos Lima','marcos@loja.com','marcos1',NULL,NULL,NULL,NULL),(5,'Julia Costa','julia@log.com','julia123',NULL,NULL,NULL,NULL),(10,'Naomi','aimed09513@gmail.com','loja2',NULL,'2026-08-04 15:51:57.000000','OPERADOR',0);
+INSERT INTO `usuarios` VALUES (1,'Admin Sistema','admin@log.com','admin123',NULL,NULL,NULL,NULL),(2,'Carlos Silva','carlos@loja.com','loja123',NULL,NULL,NULL,NULL),(3,'Ana Souza','ana@entrega.com','ana123',NULL,NULL,NULL,NULL),(4,'Marcos Lima','marcos@loja.com','marcos1',NULL,NULL,NULL,NULL),(5,'Julia Costa','julia@log.com','julia123',NULL,NULL,NULL,NULL),(10,'Naomi','aimed09513@gmail.com','loja2',NULL,'2026-08-04 15:51:57.000000','OPERADOR',0),(11,'Marina','marina2@teste.com','1234567M',NULL,'2026-08-05 00:53:20.805469','OPERADOR',0);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -157,4 +158,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-08-04 17:01:27
+-- Dump completed on 2026-08-07 12:06:50
