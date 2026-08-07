@@ -5,9 +5,11 @@
 package com.logisticab2bapi.logistica_api.service;
 
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -21,33 +23,24 @@ import org.springframework.stereotype.Service;
  * @author Aluno
  */
 @Service
-public class MailService {
+public class MailService{
     
     @Autowired
     private JavaMailSender mailSender;
     
-    private static final String TEMPLATE_NAME = "Registro";
-    
-    private static final String TEMPLATE_NAME = "Registro";
-    
-    private static final String TEMPLATE_NAME = "Registro";
-    
-    private static final String TEMPLATE_NAME = "Registro";
-    
-    //email que recebera 
-    final String adminMail ="Aimed09513";
-    
+    @Value("${spring.mail.username}")
+    private String remetente;
     
     //Exige Otp e expiracao  =  abritos a seguir devem ser deifinidos
-    private String ultimoOtp;//verificacao do otp
-    
+    private String ultimoOtp;//verificacao do otp   
     private Instant otpHora;//renforça o tempo para a expiracao
+    
     
     //method suporte para gerar e enviar o OTP 
     public String sendOtp(String client){//gera otp 5 digitos aleatorios 
        
         //salvar e tempo
-        String otp = String.format("%05d", new Random().nextInt(100000));
+        String otp = String.format("%06d", new Random().nextInt(100000));
         this.ultimoOtp = otp;
         
         this.otpHora = Instant.now();
@@ -55,17 +48,31 @@ public class MailService {
         //Permite validacao e verificacao do tempo de expiracao
         
         //Corpo da mensagem
-        SimpleMailMessage mensagem = new SimpleMailMessage();
-        mensagem.setFrom(adminMail);        
-        mensagem.setTo(client);                
-        mensagem.setSubject("aimed09513@gmail.com");                
-        mensagem.setText("Seu Otp é" + otp);        
-        mailSender.send(mensagem);
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom(remetente);        
+        msg.setTo(client);                
+        msg.setSubject("aimed09513@gmail.com");    
+        msg.setText("Seu Otp é: " + otp + " , vàlido por 30 minutos.");        
+        mailSender.send(msg);
         
         return otp;
         //retornar ajuda com a logica da verificacao, testar e debugar
     }
-    /*
+    
+    
+    public boolean validarOtp(String otpDigitado){
+        if(ultimoOtp == null){
+            return false;
+        }
+        if(Duration.between(otpHora, Instant.now()).toMinutes() > 30){
+            return false;
+        }
+        
+        return ultimoOtp.equals(otpDigitado);
+    }
+  
+}
+  /*
     injete-o aonde for preciso, seja Controller ou Auth Service
     
     Send OTP
@@ -83,13 +90,3 @@ public class MailService {
     não as exibe no seu aplicativo e não as armazena para leitura. Para receber mensagens, 
     outros protocolos como IMAP ou POP3 entram em cena.
     */
-    
-    
-    
-    
-    
-   
-    
-    
-    
-}

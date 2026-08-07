@@ -40,6 +40,9 @@ public class Pacote {
     //@Column(name = "status_atual")
     private StatusAtual statusAtual;
     
+    @Column(name = "email_destinatario")
+    private String emailDestinatario;
+    
     //@Column(name = "otp_codigo")
     private String otpCodigo;
 
@@ -59,6 +62,15 @@ public class Pacote {
         ARQUIVADO
     }
 
+    public String getEmailDestinatario() {
+        return emailDestinatario;
+    }
+
+    public void setEmailDestinatario(String emailDestinatario) {
+        this.emailDestinatario = emailDestinatario;
+    }
+    
+    
     public Long getId() {
         return id;
     }
