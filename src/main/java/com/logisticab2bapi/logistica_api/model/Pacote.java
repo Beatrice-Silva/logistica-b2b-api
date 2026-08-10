@@ -26,30 +26,25 @@ public class Pacote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@Column(name = "codigo_rastreio", unique = true)
+    @Column(unique = true)
     private String codigoRastreio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_loja")
     private Loja loja;
     
-    //@Column(name = "endereco_destino")
     private String enderecoDestino;
 
     @Enumerated(EnumType.STRING)
-    //@Column(name = "status_atual")
     private StatusAtual statusAtual;
     
     @Column(name = "email_destinatario")
     private String emailDestinatario;
     
-    //@Column(name = "otp_codigo")
     private String otpCodigo;
 
-   // @Column(name = "otp_expira")
     private LocalDateTime otpExpira;
-    
-    //@Column(name = "desc_observ")
+
     private String descObserv;
 
     //opcoes limitadas de status
@@ -58,8 +53,9 @@ public class Pacote {
         COLETADO, //operador coleta
         EM_TRANSITO, //com entregador
         ENTREGUE, //Com OTP valido
-        DEVOLVIDO,
-        ARQUIVADO
+        DEVOLVIDO, // Com a justificacao de emprevisto na entrega
+        //cancelamento -> EM_TRANSITO -> COLETADO
+        ARQUIVADO // Para exclusao final
     }
 
     public String getEmailDestinatario() {

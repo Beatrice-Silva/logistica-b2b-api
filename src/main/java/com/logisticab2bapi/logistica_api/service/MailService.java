@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * 
  * Fonte: https://medium.com/@udnfahim/mail-verification-using-smtp-gmail-spring-boot-guide-30bc9cedc47a
  * Fonte2: https://medium.com/orangejuicefc/servi%C3%A7o-de-envio-de-e-mail-utilizando-java-spring-boot-e-thymeleaf-97241b0e0cf7
- * app mail senha = fmob spdu qkdj ysaq
+ * app mail senha = fmobspduqkdjysaq pelo google 
  *
  * @author Aluno
  */
@@ -28,7 +28,7 @@ public class MailService{
     @Autowired
     private JavaMailSender mailSender;
     
-    @Value("${spring.mail.username}")
+    @Value("${mail.from.name}")
     private String remetente;
     
     //Exige Otp e expiracao  =  abritos a seguir devem ser deifinidos

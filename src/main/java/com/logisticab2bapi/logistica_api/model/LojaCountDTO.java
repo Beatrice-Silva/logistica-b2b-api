@@ -9,7 +9,9 @@ package com.logisticab2bapi.logistica_api.model;
  * @author BEATRICE
  */
 public class LojaCountDTO {
-
+    private String nomeLoja;
+    private Long total;
+    
     public LojaCountDTO() {
     }
 
@@ -18,8 +20,7 @@ public class LojaCountDTO {
         this.total = total;
     }
     
-    private String nomeLoja;
-    private Long total;
+   
 
     public String getNomeLoja() {
         return nomeLoja;

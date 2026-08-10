@@ -7,6 +7,7 @@ package com.logisticab2bapi.logistica_api.controller;
 import com.logisticab2bapi.logistica_api.model.Loja;
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.repository.LojaRepository;
+import com.logisticab2bapi.logistica_api.service.LojaService;
 import com.logisticab2bapi.logistica_api.service.TokenService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class LojaController{
     
     @Autowired private TokenService tokenService;
-    
+    @Autowired private LojaService lojaService;
     @Autowired private LojaRepository repo;
 
     @PostMapping
     public Loja criar(@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
+        String token = auth.replace("Bearer ", "");
+        Usuario logado = tokenService.extrairClaim(token);
+        loja.setIdUsuario(logado.getId());
+        loja.setAtivo(true);
+        return repo.save(loja);
+    }
+    
+    
+    @PostMapping("loja/editar/{id}")
+    public Loja editarLoja(@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
         String token = auth.replace("Bearer ", "");
         Usuario logado = tokenService.extrairClaim(token);
         loja.setIdUsuario(logado.getId());
@@ -52,7 +63,14 @@ public class LojaController{
 
     @GetMapping("/ativas")
     public List<Loja> listarAtivas(){
-        return repo.findByAtivoTrue(true);
+        return repo.findByAtivoTrue();
+    }
+    
+    @PostMapping
+    public Loja arquivarLoja(@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
+        
+        loja.setAtivo(false);
+        return repo.save(loja);
     }
     
 }

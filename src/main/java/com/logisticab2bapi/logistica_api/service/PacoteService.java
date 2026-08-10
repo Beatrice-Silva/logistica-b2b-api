@@ -29,12 +29,16 @@ public class PacoteService {
     
     @Autowired 
     private PacoteRepository pacoteRepo;
-    
-    @Autowired private StatusHistoricoRepository histRepo;
-    @Autowired private LojaRepository lojaRepo;
-    @Autowired private NotificacaoService notificacaoService;
-    @Autowired private TokenService tokenService;
-    @Autowired private MailService mailService;
+    @Autowired 
+    private StatusHistoricoRepository histRepo;
+    @Autowired 
+    private LojaRepository lojaRepo;
+    @Autowired 
+    private NotificacaoService notificacaoService;
+    @Autowired 
+    private TokenService tokenService;
+    @Autowired 
+    private MailService mailService;
     
     private final List<String> FLUXO = 
             List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE","ARQUIVADO");
@@ -141,7 +145,7 @@ public class PacoteService {
     map.put("ARQUIVADO", 0L);
 
     for(Object[] row : resultados) {
-        String status = row[0].toString(); //tipos dos status
+        String status = row[0].toString(); 
         Long total = (Long) row[1];
         map.put(status, total);
     }
