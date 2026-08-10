@@ -29,10 +29,10 @@ public class Pacote {
     @Column(unique = true)
     private String codigoRastreio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_loja")
     private Loja loja;
-    
+     
     private String enderecoDestino;
 
     @Enumerated(EnumType.STRING)
@@ -58,29 +58,12 @@ public class Pacote {
         ARQUIVADO // Para exclusao final
     }
 
-    public String getEmailDestinatario() {
-        return emailDestinatario;
-    }
-
-    public void setEmailDestinatario(String emailDestinatario) {
-        this.emailDestinatario = emailDestinatario;
-    }
-    
-    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCodigoRastreio() {
-        return codigoRastreio;
-    }
-
-    public void setCodigoRastreio(String codigoRastreio) {
-        this.codigoRastreio = codigoRastreio;
     }
 
     public Loja getLoja() {
@@ -90,6 +73,27 @@ public class Pacote {
     public void setLoja(Loja loja) {
         this.loja = loja;
     }
+    
+    
+    public String getEmailDestinatario() {
+        return emailDestinatario;
+    }
+
+    public void setEmailDestinatario(String emailDestinatario) {
+        this.emailDestinatario = emailDestinatario;
+    }
+    
+    
+ 
+    public String getCodigoRastreio() {
+        return codigoRastreio;
+    }
+
+    public void setCodigoRastreio(String codigoRastreio) {
+        this.codigoRastreio = codigoRastreio;
+    }
+
+  
 
     public String getEnderecoDestino() {
         return enderecoDestino;

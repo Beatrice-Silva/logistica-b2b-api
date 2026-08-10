@@ -13,7 +13,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,7 @@ public class LojaController{
     
     @Autowired private TokenService tokenService;
     @Autowired private LojaService lojaService;
-    @Autowired private LojaRepository repo;
+    @Autowired private LojaRepository lojaRepo;
 
     @PostMapping
     public Loja criar(@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
@@ -38,17 +40,14 @@ public class LojaController{
         Usuario logado = tokenService.extrairClaim(token);
         loja.setIdUsuario(logado.getId());
         loja.setAtivo(true);
-        return repo.save(loja);
+        return lojaRepo.save(loja);
     }
     
     
-    @PostMapping("loja/editar/{id}")
-    public Loja editarLoja(@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
-        String token = auth.replace("Bearer ", "");
-        Usuario logado = tokenService.extrairClaim(token);
-        loja.setIdUsuario(logado.getId());
-        loja.setAtivo(true);
-        return repo.save(loja);
+    @PutMapping("/{id}")
+    public Loja editarLoja(@PathVariable Long id,@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
+        Usuario logado = tokenService.extrairClaim(auth.replace("Bearer",""));
+        return lojaRepo.save(loja);
     }
 
     @GetMapping
@@ -56,21 +55,21 @@ public class LojaController{
         String token = auth.replace("Bearer ", "");
         Usuario logado = tokenService.extrairClaim(token);
         if(logado.getPerfilRole() == Usuario.PerfilRole.ADMIN){
-            return repo.findAll();
+            return lojaRepo.findAll();
         }
-        return repo.findByIdUsuario(logado.getId());
+        return lojaRepo.findByIdUsuario(logado.getId());
     }
 
     @GetMapping("/ativas")
     public List<Loja> listarAtivas(){
-        return repo.findByAtivoTrue();
+        return lojaRepo.findByAtivoTrue();
     }
     
-    @PostMapping
-    public Loja arquivarLoja(@RequestHeader("Authorization") String auth, @RequestBody Loja loja){
+    @PutMapping("/{id}/arquivar")
+    public Loja arquivarLoja(@PathVariable Long id, @RequestHeader("Authorization") String auth){
         
-        loja.setAtivo(false);
-        return repo.save(loja);
+        Usuario usuarioLogado = tokenService.extrairClaim(auth.replace("Bearer",""));
+        return lojaService.arquivar(id, usuarioLogado);
     }
     
 }

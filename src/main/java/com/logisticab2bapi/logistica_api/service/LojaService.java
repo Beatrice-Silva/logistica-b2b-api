@@ -63,7 +63,7 @@ public class LojaService {
         return lojaRepo.save(atual);
         }
     
-    private Loja arquivar(Long id, Usuario usuarioLogado){
+    public Loja arquivar(Long id, Usuario usuarioLogado){
         Loja l = lojaRepo.findById(id).orElseThrow();
         if(
                 usuarioLogado.getPerfilRole() 
