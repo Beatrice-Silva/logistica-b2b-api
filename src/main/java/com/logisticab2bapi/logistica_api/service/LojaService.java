@@ -76,6 +76,8 @@ public class LojaService {
         l.setAtivo(false);
         return lojaRepo.save(l);
     }
+    
+    
    
     
 }
