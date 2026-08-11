@@ -47,19 +47,20 @@ public class PacoteController {
     @PostMapping("/registrar")
     public String criarPacote(
             @RequestHeader("Authorization") String auth, 
-            @RequestBody Pacote pacote){
+            @RequestBody Pacote pacote)
+    {
         
         String token = auth.replace("Bearer ", "");
         Usuario usuarioLogado = tokenService.extrairClaim(token);
         service.novoPacote(pacote, usuarioLogado);
         return "Pacote cadastrado com sucesso!";
     }
-
-    @GetMapping("/codigo/{codigo}")
-    public Pacote rastrear(@PathVariable String codigo){
-        return service.buscarPorCodigo(codigo); 
+    
+    @GetMapping("/listar")
+    public List<Pacote> listar(@RequestHeader("Authorization") String auth){ 
+        String token = auth.replace("Bearer ", "");
+        return service.listarPacote(token);
     }
-
     
     @GetMapping("/estatisticas")
     public Map<String, Long> estatisticas(){
@@ -79,21 +80,25 @@ public class PacoteController {
         return lista;
     }
     
-    @PutMapping("/{id}/status")
+    @PostMapping("/{id}/status")
     public String status(@RequestHeader("Authorization") String auth, @PathVariable Long id, @RequestParam String novo, @RequestParam(required = false) String otp){
         String token = auth.replace("Bearer ", "");
         service.atualizar(id, novo, otp, token);
         return "Status atualizado!";
     }
     
-    @GetMapping("/listar")
-    public List<Pacote> listar(@RequestHeader("Authorization") String auth){ 
-        String token = auth.replace("Bearer ", "");
-        return service.listarPacote(token);
+    @GetMapping("/codigo/{codigo}")
+    public Pacote rastrear(@PathVariable String codigo){
+        return service.buscarPorCodigo(codigo); 
     }
-    
     @GetMapping("/public/rastreio/{codigo}")
     public Pacote rastreioPublico(@PathVariable String codigo){
     return repo.findByCodigoRastreio(codigo).orElseThrow();
     }
+    
+    @GetMapping("/arquivados")
+    public List<Loja> listarArquivados(){
+        return repo.findbyStatusAtual(status(auth, Long.MIN_VALUE, novo, otp));
+    }
+    
 }

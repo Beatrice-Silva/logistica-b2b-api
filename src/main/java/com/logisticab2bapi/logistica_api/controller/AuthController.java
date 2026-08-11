@@ -35,6 +35,18 @@ public class AuthController {
         return service.login(user.get("email"), user.get("senha"));
     }
     
+    @GetMapping("/operadores")
+    public List<Usuario> ListarEntregadores(@,Model model){
+        return service.listarOperadores();
+    }
+    
+    @GetMapping("/entregadores")
+    public List<Usuario> ListarOperadores(,Model model){
+        
+        
+        return service.listarOperadores();
+    }
+    
     
 }
      
