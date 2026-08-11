@@ -55,7 +55,7 @@ public class PacoteController {
         return "Pacote cadastrado com sucesso!";
     }
 
-    @GetMapping("/{codigo}")
+    @GetMapping("/codigo/{codigo}")
     public Pacote rastrear(@PathVariable String codigo){
         return service.buscarPorCodigo(codigo); 
     }
