@@ -92,5 +92,8 @@ public class PacoteController {
         return service.listarPacote(token);
     }
     
-    
+    @GetMapping("/public/rastreio/{codigo}")
+    public Pacote rastreioPublico(@PathVariable String codigo){
+    return repo.findByCodigoRastreio(codigo).orElseThrow();
+    }
 }
