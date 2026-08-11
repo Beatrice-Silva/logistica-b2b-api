@@ -48,6 +48,14 @@ public class LojaService {
         
     }
     
+     public List<Loja> listarPacotesPorLoja(Long id, Usuario usuarioLogado){
+        if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN)
+        return lojaRepo.findAll();
+            
+        return lojaRepo.findByIdUsuario(usuarioLogado.getId());
+        
+    }
+    
     
         public Loja atualizar(Long id, Loja nova, Usuario logado){
         Loja atual = lojaRepo.findById(id).orElseThrow();
@@ -62,6 +70,8 @@ public class LojaService {
         atual.setEndereco(nova.getEndereco());
         return lojaRepo.save(atual);
         }
+  
+   
     
     public Loja arquivar(Long id, Usuario usuarioLogado){
         Loja l = lojaRepo.findById(id).orElseThrow();

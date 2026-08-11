@@ -4,6 +4,7 @@
  */
 package com.logisticab2bapi.logistica_api.controller;
 
+import com.logisticab2bapi.logistica_api.model.Loja;
 import com.logisticab2bapi.logistica_api.model.LojaCountDTO;
 import com.logisticab2bapi.logistica_api.model.Pacote;
 import com.logisticab2bapi.logistica_api.model.Usuario;
@@ -16,11 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,8 +96,8 @@ public class PacoteController {
     }
     
     @GetMapping("/arquivados")
-    public List<Loja> listarArquivados(){
-        return repo.findbyStatusAtual(status(auth, Long.MIN_VALUE, novo, otp));
+    public List<Pacote> listarArquivados(){
+        return repo.contarPorStatus(status);
     }
     
 }

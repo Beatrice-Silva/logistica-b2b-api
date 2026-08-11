@@ -24,7 +24,6 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     
     //Contagem de quantos em cada status no dashboard
     long countByStatusAtual(StatusAtual statusAtual);
-
     
     //dashboard 
     @Query(value = "SELECT status_atual, COUNT(*) FROM pacotes GROUP BY status_atual", nativeQuery = true)
