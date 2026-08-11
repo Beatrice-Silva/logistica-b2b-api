@@ -97,7 +97,7 @@ public class PacoteController {
     
     @GetMapping("/arquivados")
     public List<Pacote> listarArquivados(){
-        return repo.contarPorStatus(status);
+        return repo.contarPorStatus();
     }
     
 }

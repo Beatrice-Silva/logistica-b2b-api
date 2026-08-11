@@ -104,7 +104,8 @@ public class LojaController{
         
         Usuario logado = tokenService.extrairClaim(token);
         if(logado.getPerfilRole() == Usuario.PerfilRole.ADMIN){
-            return lojaRepo.findByAtivoTrue();
+            return lojaRepo.findByAtivoTrue(true);
+                    //.findByAtivoTrue()
         }
         
         return lojaService.listarPacotesPorLoja(Long.MIN_VALUE, logado); 

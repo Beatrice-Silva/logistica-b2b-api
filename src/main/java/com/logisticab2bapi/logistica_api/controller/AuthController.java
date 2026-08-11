@@ -4,10 +4,13 @@
  */
 package com.logisticab2bapi.logistica_api.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.service.UsuarioService;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +39,7 @@ public class AuthController {
     }
     
     @GetMapping("/operadores")
-    public List<Usuario> ListarEntregadores(@,Model model){
+    public List<Usuario> ListarEntregadores(@ ,Model model){
         return service.listarOperadores();
     }
     
