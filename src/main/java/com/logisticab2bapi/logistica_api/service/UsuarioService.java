@@ -1,6 +1,7 @@
 package com.logisticab2bapi.logistica_api.service;
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.repository.UsuarioRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -49,4 +50,23 @@ public class UsuarioService {
     
         return tokenService.gerarToken(usuario);
     }
+    
+    public List<Usuario> listarAdmins() {
+
+        return repository.findByPerfilRole(Usuario.PerfilRole.ADMIN);
+    }
+    
+    public List<Usuario> listarOperadores() {
+        return repository.findByPerfilRole(Usuario.PerfilRole.OPERADOR);
+    }
+    
+    public List<Usuario> listarEntregadores() {
+        return repository.findByPerfilRole(Usuario.PerfilRole.ENTREGADOR);
+    }
+     
+    public List<Usuario> listarTodos() {
+       
+        return repository.findAll();
+    }
+        
 }

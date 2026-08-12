@@ -41,19 +41,14 @@ public class LojaService {
     }   
     
     public List<Loja> listar(Usuario usuarioLogado){
-        if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN)
-        return lojaRepo.findAll();
-            
+        if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN) return lojaRepo.findAll();
         return lojaRepo.findByIdUsuario(usuarioLogado.getId());
-        
     }
-    
-     public List<Loja> listarPacotesPorLoja(Long id, Usuario usuarioLogado){
-        if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN)
-        return lojaRepo.findAll();
-            
-        return lojaRepo.findByIdUsuario(usuarioLogado.getId());
-        
+
+    public List<Loja> listarAtivas(Usuario usuarioLogado){
+        if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN) 
+            return lojaRepo.findByAtivoTrue();
+        return lojaRepo.findByIdUsuarioAndAtivoTrue(usuarioLogado.getId());
     }
     
     

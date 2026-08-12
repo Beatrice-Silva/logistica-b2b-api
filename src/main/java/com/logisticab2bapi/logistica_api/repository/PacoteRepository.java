@@ -19,11 +19,12 @@ import org.springframework.stereotype.Repository;
 @Repository 
 public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     
+    List<Pacote> findByLojaId(Long idLoja);
     //consulta publica do destinatario
     Optional<Pacote> findByCodigoRastreio(String codigoRastreio);
     
     //Contagem de quantos em cada status no dashboard
-    long countByStatusAtual(StatusAtual statusAtual);
+    List<Pacote> findByStatusAtual(Pacote.StatusAtual status);
     
     //dashboard 
     @Query(value = "SELECT status_atual, COUNT(*) FROM pacotes GROUP BY status_atual", nativeQuery = true)
@@ -32,6 +33,5 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     @Query("SELECT p.loja.nomeEstabelecimento as nomeLoja, COUNT(p) as total FROM Pacote p GROUP BY p.loja.nomeEstabelecimento")
     List<Object[]> contarPorLoja();   
    
-    List<Pacote> findByLojaId(Long idLoja);
     
 }

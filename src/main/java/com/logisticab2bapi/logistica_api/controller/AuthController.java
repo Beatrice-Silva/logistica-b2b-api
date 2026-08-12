@@ -38,16 +38,26 @@ public class AuthController {
         return service.login(user.get("email"), user.get("senha"));
     }
     
+    @GetMapping("/administradores")
+    public List<Usuario> ListarAdministradores(Model model){
+        return service.listarAdmins();
+    }
+    
     @GetMapping("/operadores")
-    public List<Usuario> ListarEntregadores(@ ,Model model){
+    public List<Usuario> listarOperadores(Model model){
+
         return service.listarOperadores();
     }
     
     @GetMapping("/entregadores")
-    public List<Usuario> ListarOperadores(,Model model){
-        
-        
-        return service.listarOperadores();
+    public List<Usuario> listarEntregadores(Model model){
+        return service.listarEntregadores();
+    }
+    
+    @GetMapping("/operadores")
+    public List<Usuario> listarTodos(Model model){
+
+        return service.listarTodos();
     }
     
     

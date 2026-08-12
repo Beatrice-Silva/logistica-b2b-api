@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,17 +44,14 @@ public class PacoteController {
     private TokenService tokenService;
     
 
-    @PostMapping("/registrar")
-    public String criarPacote(
-            @RequestHeader("Authorization") String auth, 
-            @RequestBody Pacote pacote)
-    {
-        
-        String token = auth.replace("Bearer ", "");
-        Usuario usuarioLogado = tokenService.extrairClaim(token);
+   @PostMapping("/registrar")
+    public String criarPacote(@RequestHeader("Authorization") String auth, @RequestBody Pacote pacote){
+        Usuario usuarioLogado = tokenService.extrairClaim(auth.replace("Bearer ", ""));
         service.novoPacote(pacote, usuarioLogado);
         return "Pacote cadastrado com sucesso!";
     }
+        
+
     
     @GetMapping("/listar")
     public List<Pacote> listar(@RequestHeader("Authorization") String auth){ 
@@ -70,16 +68,19 @@ public class PacoteController {
         return map;
     }
     
-    @GetMapping("/por-loja")
+   @GetMapping("/por-loja")
     public List<LojaCountDTO> porLoja(){
         List<LojaCountDTO> lista = new ArrayList<>();
         for(Object[] row : repo.contarPorLoja()){
-            lista.add(new LojaCountDTO((String)row[0], ((Number)row[1]).longValue()));
+            Long id = ((Number)row[0]).longValue();
+            String nome = (String)row[1];
+            Long total = ((Number)row[2]).longValue();
+            lista.add(new LojaCountDTO(id, nome, total));
         }
         return lista;
     }
     
-    @PostMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     public String status(@RequestHeader("Authorization") String auth, @PathVariable Long id, @RequestParam String novo, @RequestParam(required = false) String otp){
         String token = auth.replace("Bearer ", "");
         service.atualizar(id, novo, otp, token);
@@ -95,9 +96,14 @@ public class PacoteController {
     return repo.findByCodigoRastreio(codigo).orElseThrow();
     }
     
-    @GetMapping("/arquivados")
+   @GetMapping("/arquivados")
     public List<Pacote> listarArquivados(){
-        return repo.contarPorStatus();
+        return repo.findByStatusAtual(Pacote.StatusAtual.ARQUIVADO);
+    }
+    
+    @GetMapping("/loja/{lojaId}")
+    public List<Pacote> porLojaId(@PathVariable Long lojaId){
+    return repo.findByLojaId(lojaId);
     }
     
 }
