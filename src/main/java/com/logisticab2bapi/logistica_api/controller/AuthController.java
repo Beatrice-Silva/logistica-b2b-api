@@ -54,7 +54,7 @@ public class AuthController {
         return service.listarEntregadores();
     }
     
-    @GetMapping("/operadores")
+    @GetMapping("/todos")
     public List<Usuario> listarTodos(Model model){
 
         return service.listarTodos();
