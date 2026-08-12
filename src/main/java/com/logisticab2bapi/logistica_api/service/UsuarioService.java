@@ -31,7 +31,6 @@ public class UsuarioService {
         }
         repository.save(user);
     }
-
     
     public String login(String email, String senha) {
         if(email == null || email.equals("")) {
@@ -46,8 +45,6 @@ public class UsuarioService {
         if(usuario == null || !usuario.getSenha().equals(senha)) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Email ou senha inválidos");
         }
-
-    
         return tokenService.gerarToken(usuario);
     }
     
