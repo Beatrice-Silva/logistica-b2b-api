@@ -16,18 +16,22 @@ public class UsuarioService {
     @Autowired
     private TokenService tokenService;
 
-    
+    //
     public void registrar(Usuario user) {
+        
+        if(user.getEmail() == null || user.getNome().equals("")) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Nome do usuário não foi preenchido!");
+        }
         if(user.getEmail() == null || user.getEmail().equals("")) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email não preenchido");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email não preenchido!");
         }
         if(user.getSenha() == null || user.getSenha().equals("")) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Senha não preenchida");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Senha não preenchida!");
         }
         if(user.getPerfilRole() == null) {
          
-            user.setPerfilRole(Usuario.PerfilRole.OPERADOR);
-            
+            user.setPerfilRole(Usuario.PerfilRole.ENTREGADOR);
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Classificação Entregador");
         }
         repository.save(user);
     }

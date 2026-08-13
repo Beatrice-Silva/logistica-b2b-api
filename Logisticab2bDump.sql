@@ -133,7 +133,7 @@ CREATE TABLE `usuarios` (
   `senha` varchar(255) DEFAULT NULL,
   `bloqueado_ate` datetime(6) DEFAULT NULL,
   `criado_em` datetime(6) DEFAULT NULL,
-  `perfil_role` enum('ADMIN','ENTREGADOR','OPERADOR') DEFAULT NULL,
+  `perfil_role` enum('ADMIN','ENTREGADOR','OPERADOR') DEFAULT 'ENTREGADOR',
   `tentativas_otp` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
