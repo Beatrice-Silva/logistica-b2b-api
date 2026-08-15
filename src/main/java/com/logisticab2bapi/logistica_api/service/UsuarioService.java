@@ -3,6 +3,7 @@ import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.repository.UsuarioRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,7 +20,7 @@ public class UsuarioService {
     //
     public void registrar(Usuario user) {
         
-        if(user.getEmail() == null || user.getNome().equals("")) {
+        if(user.getNome() == null || user.getNome().equals("")) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Nome do usuário não foi preenchido!");
         }
         if(user.getEmail() == null || user.getEmail().equals("")) {
@@ -30,8 +31,11 @@ public class UsuarioService {
         }
         if(user.getPerfilRole() == null) {
          
-            user.setPerfilRole(Usuario.PerfilRole.ENTREGADOR);
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Classificação Entregador");
+            user.setPerfilRole(Usuario.PerfilRole.OPERADOR);
+        }
+         if(repository.findByEmail(user.getEmail()).isPresent()) {
+ 
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email já cadastrado!");
         }
         repository.save(user);
     }

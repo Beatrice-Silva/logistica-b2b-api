@@ -30,8 +30,8 @@ public class Usuario {
     
     @Enumerated(EnumType.STRING) //enum salvo como texto
     @Column(name = "perfil_role")
-    private PerfilRole perfilRole; // criado a frente aceitando apenas os mencionados
-
+    // criado a frente aceitando apenas os mencionados
+    private PerfilRole perfilRole = PerfilRole.OPERADOR;
      @Column(name = "tentativas_otp")
     private Integer tentativasOtp = 0; // Começa com zero, conta quantos OTPs errou
 
