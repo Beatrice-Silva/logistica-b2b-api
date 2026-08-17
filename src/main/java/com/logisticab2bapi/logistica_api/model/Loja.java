@@ -55,6 +55,7 @@ public class Loja {
         this.id = id;
     }
 
+  
     public String getCodigoLon() {
         return codigoLon;
     }

@@ -66,25 +66,6 @@ public class Pacote {
         this.id = id;
     }
 
-    public Loja getLoja() {
-        return loja;
-    }
-
-    public void setLoja(Loja loja) {
-        this.loja = loja;
-    }
-    
-    
-    public String getEmailDestinatario() {
-        return emailDestinatario;
-    }
-
-    public void setEmailDestinatario(String emailDestinatario) {
-        this.emailDestinatario = emailDestinatario;
-    }
-    
-    
- 
     public String getCodigoRastreio() {
         return codigoRastreio;
     }
@@ -93,7 +74,13 @@ public class Pacote {
         this.codigoRastreio = codigoRastreio;
     }
 
-  
+    public Loja getLoja() {
+        return loja;
+    }
+
+    public void setLoja(Loja loja) {
+        this.loja = loja;
+    }
 
     public String getEnderecoDestino() {
         return enderecoDestino;
@@ -107,8 +94,16 @@ public class Pacote {
         return statusAtual;
     }
 
-    public void setStatusAtual(StatusAtual s) {
+    public void setStatusAtual(StatusAtual statusAtual) {
         this.statusAtual = statusAtual;
+    }
+
+    public String getEmailDestinatario() {
+        return emailDestinatario;
+    }
+
+    public void setEmailDestinatario(String emailDestinatario) {
+        this.emailDestinatario = emailDestinatario;
     }
 
     public String getOtpCodigo() {
@@ -134,9 +129,7 @@ public class Pacote {
     public void setDescObserv(String descObserv) {
         this.descObserv = descObserv;
     }
-    
-    
-    
+
     
 
     

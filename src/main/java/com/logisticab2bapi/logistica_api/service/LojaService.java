@@ -44,12 +44,17 @@ public class LojaService {
         if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN) return lojaRepo.findAll();
         return lojaRepo.findByIdUsuario(usuarioLogado.getId());
     }
-
+/*
     public List<Loja> listarAtivas(Usuario usuarioLogado){
         if(usuarioLogado.getPerfilRole() == Usuario.PerfilRole.ADMIN) 
             return lojaRepo.findByAtivoTrue();
         return lojaRepo.findByIdUsuarioAndAtivoTrue(usuarioLogado.getId());
     }
+    */
+    public List<Loja> listarAtivas(Usuario usuarioLogado){
+  
+    return lojaRepo.findByAtivoTrue();
+}
     
     
         public Loja atualizar(Long id, Loja nova, Usuario logado){
@@ -81,8 +86,5 @@ public class LojaService {
         l.setAtivo(false);
         return lojaRepo.save(l);
     }
-    
-    
-   
     
 }

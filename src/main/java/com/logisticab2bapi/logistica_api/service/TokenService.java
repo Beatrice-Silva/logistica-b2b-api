@@ -49,7 +49,7 @@ public class TokenService {
                 .compact();
     }
 
-    // igual ao seu extrairClaim
+    
     public Usuario extrairClaim(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(this.getKeySign())

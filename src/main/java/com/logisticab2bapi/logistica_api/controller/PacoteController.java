@@ -103,7 +103,7 @@ public class PacoteController {
     
     @GetMapping("/loja/{lojaId}")
     public List<Pacote> porLojaId(@PathVariable Long lojaId){
-    return repo.findByLojaId(lojaId);
+    return repo.findByLoja_Id(lojaId);
     }
     
 }

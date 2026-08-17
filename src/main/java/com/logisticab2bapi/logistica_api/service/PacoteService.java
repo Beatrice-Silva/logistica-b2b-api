@@ -40,6 +40,7 @@ public class PacoteService {
     @Autowired 
     private MailService mailService;
     
+    //nao pode pular fluxo !
     private final List<String> FLUXO = 
             List.of("CRIADO","COLETADO","EM_TRANSITO","ENTREGUE","ARQUIVADO");
 
@@ -88,7 +89,7 @@ public class PacoteService {
                 .orElseThrow(() -> 
                 new RuntimeException("Pacote não encontrado"));
     }
-
+    
     public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
         Pacote p = pacoteRepo.findById(id).orElseThrow();
        
@@ -97,6 +98,7 @@ public class PacoteService {
         int novo = FLUXO.indexOf(novoStatus.toUpperCase());
         if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
         
+        //Gera quando vai em transito e expira em 24 horas
         if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
             mailService.sendOtp(p.getEmailDestinatario());
             p.setStatusAtual(Pacote.StatusAtual.valueOf(novoStatus.toUpperCase()));
@@ -104,7 +106,7 @@ public class PacoteService {
             p.setOtpExpira(LocalDateTime.now().plusHours(24));
         }
         
-       
+        
         if(novoStatus.equalsIgnoreCase("ENTREGUE")){
             if(otp == null || !otp.equals(p.getOtpCodigo())){
                 throw new RuntimeException("OTP inválido para entrega");

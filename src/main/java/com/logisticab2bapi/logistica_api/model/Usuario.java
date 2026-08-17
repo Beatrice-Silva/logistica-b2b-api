@@ -21,7 +21,7 @@ public class Usuario {
     
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //banco gera sozinho
+    
     private Long id;
     private String nome;
     private String email;
@@ -30,24 +30,43 @@ public class Usuario {
     
     @Enumerated(EnumType.STRING) //enum salvo como texto
     @Column(name = "perfil_role")
-    // criado a frente aceitando apenas os mencionados
+    
     private PerfilRole perfilRole = PerfilRole.OPERADOR;
      @Column(name = "tentativas_otp")
-    private Integer tentativasOtp = 0; // Começa com zero, conta quantos OTPs errou
+    private Integer tentativasOtp = 0; 
 
     @Column(name = "bloqueado_ate")
-    private LocalDateTime bloqueadoAte; // Data até quando fica bloqueado se errar muito
+    private LocalDateTime bloqueadoAte;
 
     @Column(name = "criado_em")
-    private LocalDateTime criadoEm = LocalDateTime.now(); // Quando criou o usuário
+    private LocalDateTime criadoEm = LocalDateTime.now(); 
 
-    //mencoes limitadas
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusConta status = StatusConta.PENDENTE; 
+
+    public enum StatusConta {
+        PENDENTE, 
+        ATIVO, 
+        BLOQUEADO
+    }
+
     public enum PerfilRole{
         ADMIN,
         OPERADOR, 
         ENTREGADOR
     }
 
+    public StatusConta getStatusConta() {
+        return status;
+    }
+
+    public void setStatusConta(StatusConta status) {
+        this.status = status;
+    }
+    
+    
+    
     public Long getId() {
         return id;
     }

@@ -18,26 +18,37 @@ public class UsuarioService {
     private TokenService tokenService;
 
     //
-    public void registrar(Usuario user) {
+   public Usuario registrar(Usuario user) {
         
-        if(user.getNome() == null || user.getNome().equals("")) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Nome do usuário não foi preenchido!");
+        if(user.getNome() == null || user.getNome().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome do usuário não foi preenchido!");
         }
-        if(user.getEmail() == null || user.getEmail().equals("")) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email não preenchido!");
+        
+        if(!user.getNome().trim().matches("^[A-Za-zÀ-ÿ]+\\s+[A-Za-zÀ-ÿ]+$")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Digite Nome e Sobrenome");
         }
-        if(user.getSenha() == null || user.getSenha().equals("")) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Senha não preenchida!");
+        if(user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email não preenchido!");
         }
-        if(user.getPerfilRole() == null) {
-         
-            user.setPerfilRole(Usuario.PerfilRole.OPERADOR);
+        if(user.getSenha() == null || user.getSenha().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha não preenchida!");
         }
-         if(repository.findByEmail(user.getEmail()).isPresent()) {
- 
+        
+        if(!user.getSenha().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha fraca: min 8 caracteres, 1 maiuscula, 1 minuscula, 1 numero e 1 especial");
+        }
+        if(repository.findByEmail(user.getEmail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email já cadastrado!");
         }
-        repository.save(user);
+
+        if(user.getPerfilRole() == null) {
+            user.setPerfilRole(Usuario.PerfilRole.OPERADOR);
+        }
+        
+        user.setStatusConta(Usuario.StatusConta.PENDENTE); // todo cadastro WEB entra em cooldown
+       
+
+        return repository.save(user);
     }
     
     public String login(String email, String senha) {
