@@ -14,6 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AuthResponse {
-    Optional<Usuario> findByEmail(String email);
     
 }

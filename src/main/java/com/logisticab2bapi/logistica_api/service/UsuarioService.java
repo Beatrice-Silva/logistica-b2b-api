@@ -50,7 +50,12 @@ public class UsuarioService {
 
         return repository.save(user);
     }
-    
+        
+    public Usuario buscarPorEmail(String email){
+       return repository.findByEmail(email).orElse(null); 
+    }
+   
+   
     public String login(String email, String senha) {
         if(email == null || email.equals("")) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email não preenchido");
