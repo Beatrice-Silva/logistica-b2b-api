@@ -64,21 +64,15 @@ public class TokenService {
         return u;
     }
     
-      public boolean validarToken(String token) {
+     public boolean validarToken(String token) {
         try {
-            // Cria um parser JWT com a chave secreta para validação
-            Jwts.parser()
-                    .setSigningKey(getKeySign())
-                    .build()
-                    // Analisa e valida o token (lança exceção se inválido ou expirado)
-                    .parseClaimsJws(token);
-            // Se chegou aqui, o token é válido
+            Jwts.parser().verifyWith(getKeySign()).build().parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Se qualquer exceção ocorrer, o token é inválido ou expirou
             return false;
         }
     }
+    
     
     
 }

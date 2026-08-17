@@ -5,7 +5,9 @@
 
 package com.logisticab2bapi.logistica_api.service;
 import com.logisticab2bapi.logistica_api.model.Loja;
+import com.logisticab2bapi.logistica_api.model.LojaCountDTO;
 import com.logisticab2bapi.logistica_api.model.Pacote;
+import static com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual.CRIADO;
 import com.logisticab2bapi.logistica_api.model.StatusHistorico;
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.model.Usuario.PerfilRole;
@@ -22,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service 
@@ -90,34 +94,48 @@ public class PacoteService {
                 new RuntimeException("Pacote não encontrado"));
     }
     
-    public Pacote atualizar(Long id, String novoStatus, String otp, String perfil){
-        Pacote p = pacoteRepo.findById(id).orElseThrow();
-       
-        int atual = FLUXO.indexOf(p.getStatusAtual().name()); 
+    public Pacote atualizar(Long id, String novoStatus, String otp, String token, String perfil){
+        Pacote p = pacoteRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pacote não encontrado"));
+        Usuario logado = tokenService.extrairClaim(token);
+
+        int idxAtual = FLUXO.indexOf(p.getStatusAtual().name());
+        int idxNovo = FLUXO.indexOf(novoStatus.toUpperCase());
         
-        int novo = FLUXO.indexOf(novoStatus.toUpperCase());
-        if(novo != atual + 1) throw new RuntimeException("Status inválido, não pode pular etapa");
-        
-        //Gera quando vai em transito e expira em 24 horas
-        if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
-            mailService.sendOtp(p.getEmailDestinatario());
-            p.setStatusAtual(Pacote.StatusAtual.valueOf(novoStatus.toUpperCase()));
-            p.setOtpCodigo(String.format("%06d", new Random().nextInt(999999)));
-            p.setOtpExpira(LocalDateTime.now().plusHours(24));
+        // não pode pular e não pode voltar
+        if(idxNovo != idxAtual + 1 && !novoStatus.equalsIgnoreCase("ARQUIVADO")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fluxo inválido. Atual: " + p.getStatusAtual() + " não pode ir para " + novoStatus);
         }
-        
-        
-        if(novoStatus.equalsIgnoreCase("ENTREGUE")){
-            if(otp == null || !otp.equals(p.getOtpCodigo())){
-                throw new RuntimeException("OTP inválido para entrega");
+
+        if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
+            // gera OTP aqui
+            String otpGerado = String.format("%06d", new Random().nextInt(999999));
+            p.setOtpCodigo(otpGerado);
+            p.setOtpExpira(LocalDateTime.now().plusHours(24));
+            p.setStatusAtual(Pacote.StatusAtual.EM_TRANSITO);
+            pacoteRepo.save(p);
+            
+            // CORRIGIDO: 3 parametros
+            mailService.enviarCodigoRastreio(p.getEmailDestinatario(), p.getCodigoRastreio(), otpGerado);
+        } 
+        else if(novoStatus.equalsIgnoreCase("ENTREGUE")){
+            if(logado.getPerfilRole() != Usuario.PerfilRole.ENTREGADOR && logado.getPerfilRole() != Usuario.PerfilRole.OPERADOR){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Só entregador pode entregar");
+            }
+            if(p.getOtpCodigo() == null || !p.getOtpCodigo().equals(otp)){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP inválido para entrega");
             }
             if(p.getOtpExpira() != null && p.getOtpExpira().isBefore(LocalDateTime.now())){
-                throw new RuntimeException("OTP expirado");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP expirado, gere novamente");
             }
+            p.setStatusAtual(Pacote.StatusAtual.ENTREGUE);
+            mailService.enviarConfirmacaoEntrega(p.getEmailDestinatario(), p.getCodigoRastreio());
+        } else {
+            p.setStatusAtual(Pacote.StatusAtual.valueOf(novoStatus.toUpperCase()));
         }
+
         Pacote salvo = pacoteRepo.save(p);
         salvarHistorico(salvo.getId(), novoStatus.toUpperCase(),salvo.getLoja().getId(),"Atualizado por " + perfil);             
-        return salvo; 
+        return salvo;
         
     }
     
@@ -134,7 +152,24 @@ public class PacoteService {
         h.setDescObserv(obs);
         histRepo.save(h);
     }
-   
+    
+     public Pacote criar(Pacote novo, String token){
+        Usuario logado = tokenService.extrairClaim(token);
+        
+        novo.setCodigoRastreio("EE" + System.currentTimeMillis());
+        novo.setStatusAtual(CRIADO);
+        novo.setOtpCodigo(String.format("%06d", new Random().nextInt(999999)));
+        Pacote salvo = pacoteRepo.save(novo);
+
+        
+        mailService.enviarCodigoRastreio(
+            salvo.getEmailDestinatario(), 
+            salvo.getCodigoRastreio(),
+            salvo.getOtpCodigo()
+        );
+        return salvo;
+     }
+   }
     /*
    public Map<String, Long> getCounts(String token) {//repo direto
     List<Object[]> resultados = pacoteRepo.contarPorStatus();
@@ -158,5 +193,5 @@ public class PacoteService {
     
     
     
-}
+
 

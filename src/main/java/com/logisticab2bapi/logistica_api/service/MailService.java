@@ -21,56 +21,44 @@ import org.springframework.stereotype.Service;
  * app mail senha = fmobspduqkdjysaq pelo google 
  *
  * @author Aluno
- */
-@Service
+ */@Service
 public class MailService{
-    
-    @Autowired
-    private JavaMailSender mailSender;
-    
-    @Value("${mail.from.name}")
-    private String remetente;
-    
-    //Exige Otp e expiracao  =  abritos a seguir devem ser deifinidos
-    private String ultimoOtp;//verificacao do otp   
-    private Instant otpHora;//renforça o tempo para a expiracao
-    
-    
-    //method suporte para gerar e enviar o OTP 
-    public String sendOtp(String client){//gera otp 5 digitos aleatorios 
-       
-        //salvar e tempo
-        String otp = String.format("%06d", new Random().nextInt(100000));
-        this.ultimoOtp = otp;
-        
-        this.otpHora = Instant.now();
-        
-        //Permite validacao e verificacao do tempo de expiracao
-        
-        //Corpo da mensagem
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom(remetente);        
-        msg.setTo(client);                
-        msg.setSubject("aimed09513@gmail.com");    
-        msg.setText("Seu Otp é: " + otp + " , vàlido por 30 minutos.");        
-        mailSender.send(msg);
-        
-        return otp;
-        //retornar ajuda com a logica da verificacao, testar e debugar
-    }
-    
-    
-    public boolean validarOtp(String otpDigitado){
-        if(ultimoOtp == null){
-            return false;
+    @Autowired private JavaMailSender mailSender;
+    @Value("${spring.mail.username:entreexpress@teste.com}") private String remetente;
+
+    // usado quando gera OTP no EM_TRANSITO
+    public void enviarCodigoRastreio(String para, String codigo, String otp){
+        try{
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setFrom(remetente);
+            msg.setTo(para);
+            msg.setSubject("Seu pacote EntreExpress - " + codigo);
+            msg.setText("Seu código de rastreio: " + codigo + 
+                       "\nSeu código de entrega (informe ao entregador): " + otp +
+                       "\nValido por 24h");
+            mailSender.send(msg);
+        } catch(Exception e){
+            System.out.println("Email não enviado: " + e.getMessage());
         }
-        if(Duration.between(otpHora, Instant.now()).toMinutes() > 30){
-            return false;
-        }
-        
-        return ultimoOtp.equals(otpDigitado);
     }
-  
+
+    // sobrecarga pra quando você só quer avisar o rastreio (resolve seu erro)
+    public void enviarCodigoRastreio(String para){
+        enviarCodigoRastreio(para, "SEU CODIGO", "000000");
+    }
+
+    public void enviarConfirmacaoEntrega(String para, String codigo){
+        try{
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setFrom(remetente);
+            msg.setTo(para);
+            msg.setSubject("Pacote entregue - " + codigo);
+            msg.setText("Seu pacote " + codigo + " foi entregue com sucesso!");
+            mailSender.send(msg);
+        } catch(Exception e){
+            System.out.println("Email confirmação não enviado: " + e.getMessage());
+        }
+    }
 }
   /*
     injete-o aonde for preciso, seja Controller ou Auth Service

@@ -79,11 +79,13 @@ public class PacoteController {
         }
         return lista;
     }
+     
+    
     
     @PutMapping("/{id}/status")
     public String status(@RequestHeader("Authorization") String auth, @PathVariable Long id, @RequestParam String novo, @RequestParam(required = false) String otp){
         String token = auth.replace("Bearer ", "");
-        service.atualizar(id, novo, otp, token);
+        service.atualizar(id, novo, otp, token, token);
         return "Status atualizado!";
     }
     
