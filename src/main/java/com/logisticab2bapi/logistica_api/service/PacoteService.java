@@ -61,6 +61,9 @@ public class PacoteService {
         }
         if(p.getEmailDestinatario() == null || p.getEmailDestinatario().isBlank()){
         }
+        if(p.getEmailDestinatario() == null || p.getEmailDestinatario().isBlank()){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email destinatário obrigatório para envio do OTP!");
+        }
 
         Loja lojaReal = lojaRepo.findById(p.getLoja().getId()).orElseThrow(() -> new RuntimeException("Loja não encontrada"));
         p.setLoja(lojaReal);
