@@ -64,24 +64,29 @@ public class PacoteService {
         if(p.getEmailDestinatario() == null || p.getEmailDestinatario().isBlank()){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email destinatário obrigatório para envio do OTP!");
         }
+        
+        
 
         Loja lojaReal = lojaRepo.findById(p.getLoja().getId()).orElseThrow(() -> new RuntimeException("Loja não encontrada"));
+        if(!lojaReal.getAtivo()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Loja inativa não recebe remessa - RN02");
+        }
         p.setLoja(lojaReal);
-
+        
+        
         String codigo = "LON" + Year.now().getValue() + String.format("%04d", pacoteRepo.count()+1);
         
         p.setCodigoRastreio(codigo);
         p.setStatusAtual(Pacote.StatusAtual.CRIADO);
 
         Pacote salvo = pacoteRepo.save(p);
-        salvarHistorico(salvo.getId(), "CRIADO", salvo.getLoja().getId(), "Remessa criada");
+        salvarHistorico(salvo.getId(), "CRIADO", salvo.getLoja().getId(), "Remessa criada" + usuarioLogado.getEmail());
         
     try {
-        notificacaoService.enviarEmail("log@teste.com", "Criado: " + codigo);
-    } catch(Exception e){
-        System.out.println("Email não enviado: " + e.getMessage());
-    }
-    
+        mailService.enviarCodigoRastreio(salvo.getEmailDestinatario(), salvo.getCodigoRastreio(), salvo.getOtpCodigo());
+        } catch(Exception e){ // salvo.getEmailDestinatario(), salvo.getCodigoRastreio()
+            System.out.println("E-mail não enviado na criação: " + e.getMessage());
+        }
     return salvo;
     }   
     
@@ -104,20 +109,20 @@ public class PacoteService {
         int idxAtual = FLUXO.indexOf(p.getStatusAtual().name());
         int idxNovo = FLUXO.indexOf(novoStatus.toUpperCase());
         
-        // não pode pular e não pode voltar
+        
         if(idxNovo != idxAtual + 1 && !novoStatus.equalsIgnoreCase("ARQUIVADO")){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fluxo inválido. Atual: " + p.getStatusAtual() + " não pode ir para " + novoStatus);
         }
 
-        if(novoStatus.equalsIgnoreCase("EM_TRANSITO")){
-            // gera OTP aqui
+        if("EM_TRANSITO".equalsIgnoreCase(novoStatus)){
+            
             String otpGerado = String.format("%06d", new Random().nextInt(999999));
             p.setOtpCodigo(otpGerado);
             p.setOtpExpira(LocalDateTime.now().plusHours(24));
             p.setStatusAtual(Pacote.StatusAtual.EM_TRANSITO);
             pacoteRepo.save(p);
             
-            // CORRIGIDO: 3 parametros
+           
             mailService.enviarCodigoRastreio(p.getEmailDestinatario(), p.getCodigoRastreio(), otpGerado);
         } 
         else if(novoStatus.equalsIgnoreCase("ENTREGUE")){
@@ -150,15 +155,19 @@ public class PacoteService {
         
         StatusHistorico h = new StatusHistorico();
         h.setIdPacote(idPacote); 
+        h.setIdUsuario(idUsuario);
         h.setStatus(status); 
         h.setDataHora(LocalDateTime.now());
         h.setDescObserv(obs);
         histRepo.save(h);
     }
     
+    
+    }
+    /*
      public Pacote criar(Pacote novo, String token){
         Usuario logado = tokenService.extrairClaim(token);
-        
+        mailService.enviarCodigoRastreio(novo.getEmailDestinatario(), novo.getCodigoRastreio());
         novo.setCodigoRastreio("EE" + System.currentTimeMillis());
         novo.setStatusAtual(CRIADO);
         novo.setOtpCodigo(String.format("%06d", new Random().nextInt(999999)));
@@ -173,7 +182,7 @@ public class PacoteService {
         return salvo;
      }
    }
-    /*
+    
    public Map<String, Long> getCounts(String token) {//repo direto
     List<Object[]> resultados = pacoteRepo.contarPorStatus();
     Map<String, Long> map = new HashMap<>();

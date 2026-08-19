@@ -38,7 +38,7 @@ public class AuthController {
     @PostMapping("/logar")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody Map<String,String> req) {
         String token = service.login(req.get("email"), req.get("senha"));
-        Usuario u = service.buscarPorEmail(req.get("email")); // cria esse método
+        Usuario u = service.buscarPorEmail(req.get("email")); 
         return ResponseEntity.ok(new AuthResponseDTO(token, u.getPerfilRole().name(), u.getEmail()));
     }
     

@@ -44,7 +44,7 @@ public class TokenService {
                 .claim("email", user.getEmail())
                 .claim("role", user.getPerfilRole().name())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1h
+                .expiration(new Date(System.currentTimeMillis() + 100 * 60 * 60 * 24)) // 24h
                 .signWith(this.getKeySign())
                 .compact();
     }
