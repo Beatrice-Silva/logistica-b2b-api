@@ -33,5 +33,6 @@ public interface PacoteRepository extends JpaRepository<Pacote, Long> {
     @Query("SELECT p.loja.id, p.loja.nomeEstabelecimento, COUNT(p) FROM Pacote p GROUP BY p.loja.id, p.loja.nomeEstabelecimento")
     List<Object[]> contarPorLoja();
    
-    
+    List<Pacote> findByLoja_IdUsuario(Long idUsuario);
+    List<Pacote> findByStatusAtualIn(List<StatusAtual> status);
 }

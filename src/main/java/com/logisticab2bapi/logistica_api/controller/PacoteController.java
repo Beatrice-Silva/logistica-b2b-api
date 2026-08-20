@@ -7,6 +7,7 @@ package com.logisticab2bapi.logistica_api.controller;
 import com.logisticab2bapi.logistica_api.model.Loja;
 import com.logisticab2bapi.logistica_api.model.LojaCountDTO;
 import com.logisticab2bapi.logistica_api.model.Pacote;
+import com.logisticab2bapi.logistica_api.model.Pacote.StatusAtual;
 import com.logisticab2bapi.logistica_api.model.Usuario;
 import com.logisticab2bapi.logistica_api.repository.PacoteRepository;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,21 +45,42 @@ public class PacoteController {
     @Autowired 
     private TokenService tokenService;
     
-
-   @PostMapping("/registrar")
+    @PostMapping("/registrar")
     public String criarPacote(@RequestHeader("Authorization") String auth, @RequestBody Pacote pacote){
         Usuario usuarioLogado = tokenService.extrairClaim(auth.replace("Bearer ", ""));
         service.novoPacote(pacote, usuarioLogado);
         return "Pacote cadastrado com sucesso!";
     }
-        
 
+    // Llista por conta 
+    @GetMapping
+    public List<Pacote> listar(@RequestHeader("Authorization") String auth){
+        Usuario u = tokenService.extrairClaim(auth.replace("Bearer ", ""));
+      
+        if(u.getPerfilRole().name().equals("ADMIN")){
+            return repo.findAll(); // admin vê tudo
+        }
+        if(u.getPerfilRole().name().equals("OPERADOR")){
+            return repo.findByLoja_IdUsuario(u.getId());
+        }
+        // ENTREGADOR
+        return repo.findByStatusAtualIn(List.of(StatusAtual.CRIADO, StatusAtual.COLETADO, StatusAtual.EM_TRANSITO));
+    }
     
+    @PutMapping("/{id}/status")
+    public String status(@RequestHeader("Authorization") String auth, @PathVariable Long id, @RequestParam String novo, @RequestParam(required=false) String otp){
+        String token = auth.replace("Bearer ", "");
+        Usuario u = tokenService.extrairClaim(token);
+        service.atualizar(id, novo, otp, token, u.getEmail());
+        return "Status atualizado!";
+    }
+
+    /*
     @GetMapping("/listar")
     public List<Pacote> listar(@RequestHeader("Authorization") String auth){ 
         String token = auth.replace("Bearer ", "");
         return service.listarPacote(token);
-    }
+    }*/
     
     @GetMapping("/estatisticas")
     public Map<String, Long> estatisticas(){
@@ -81,13 +104,13 @@ public class PacoteController {
     }
      
     
-    
+    /*
     @PutMapping("/{id}/status")
     public String status(@RequestHeader("Authorization") String auth, @PathVariable Long id, @RequestParam String novo, @RequestParam(required = false) String otp){
         String token = auth.replace("Bearer ", "");
         service.atualizar(id, novo, otp, token, token);
         return "Status atualizado!";
-    }
+    }*/
     
     @GetMapping("/codigo/{codigo}")
     public Pacote rastrear(@PathVariable String codigo){

@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
  */@Service
 public class MailService{
     @Autowired private JavaMailSender mailSender;
-    @Value("${spring.mail.username:entreexpress@teste.com}") private String remetente;
+    @Value("${spring.mail.username:entreexpress032@teste.com}") private String remetente;
 
-    // usado quando gera OTP no EM_TRANSITO
+    // 1. Quando CRIA - envia rastreio + OTP inicial 
     public void enviarCodigoRastreio(String para, String codigo, String otp){
         try{
             SimpleMailMessage msg = new SimpleMailMessage();
@@ -37,16 +37,25 @@ public class MailService{
                        "\nSeu código de entrega (informe ao entregador): " + otp +
                        "\nValido por 24h");
             mailSender.send(msg);
-        } catch(Exception e){
-            System.out.println("Email não enviado: " + e.getMessage());
-        }
+        } catch(Exception e){ System.out.println("Email não enviado: " + e.getMessage()); }
     }
 
-    // sobrecarga pra quando você só quer avisar o rastreio (resolve seu erro)
-    public void enviarCodigoRastreio(String para){
-        enviarCodigoRastreio(para, "SEU CODIGO", "000000");
+    // 2. Quando vai pra EM_TRANSITO - gera OTP novo e envia pra empresa + cliente
+    public void enviarOtpEntrega(String para, String codigoBRLON, String lon, String otp){
+        try{
+            SimpleMailMessage m = new SimpleMailMessage();
+            m.setFrom(remetente);
+            m.setTo(para);
+            m.setSubject("OTP de Entrega - " + codigoBRLON);
+            m.setText("LON interno: " + lon + 
+                      "\nRastreio: " + codigoBRLON + 
+                      "\nOTP para entrega (30 min): " + otp +
+                      "\nInforme esse código ao entregador Eduardo.");
+            mailSender.send(m);
+        } catch(Exception e){ System.out.println("Email OTP não enviado: " + e.getMessage()); }
     }
 
+    // 3. Quando ENTREGUE - confirma
     public void enviarConfirmacaoEntrega(String para, String codigo){
         try{
             SimpleMailMessage msg = new SimpleMailMessage();
@@ -55,9 +64,7 @@ public class MailService{
             msg.setSubject("Pacote entregue - " + codigo);
             msg.setText("Seu pacote " + codigo + " foi entregue com sucesso!");
             mailSender.send(msg);
-        } catch(Exception e){
-            System.out.println("Email confirmação não enviado: " + e.getMessage());
-        }
+        } catch(Exception e){ System.out.println("Email confirmação não enviado: " + e.getMessage()); }
     }
 }
   /*

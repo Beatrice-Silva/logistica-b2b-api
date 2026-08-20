@@ -27,17 +27,22 @@ public class Pacote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+   @Column(name="codigo_rastreio", unique=true)
     private String codigoRastreio;
-
-     @ManyToOne(fetch = FetchType.EAGER)
+   
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_loja")
     private Loja loja;
-     
+    
+    private Long idEntregador; 
+    
     private String enderecoDestino;
 
     @Enumerated(EnumType.STRING)
     private StatusAtual statusAtual;
+    
+    @Column(name="codigo_lon", unique=true)
+    private String codigoLon;
     
     @Column(name = "email_destinatario")
     private String emailDestinatario;
@@ -83,6 +88,14 @@ public class Pacote {
         this.loja = loja;
     }
 
+    public Long getIdEntregador() {
+        return idEntregador;
+    }
+
+    public void setIdEntregador(Long idEntregador) {
+        this.idEntregador = idEntregador;
+    }
+
     public String getEnderecoDestino() {
         return enderecoDestino;
     }
@@ -97,6 +110,14 @@ public class Pacote {
 
     public void setStatusAtual(StatusAtual statusAtual) {
         this.statusAtual = statusAtual;
+    }
+
+    public String getCodigoLon() {
+        return codigoLon;
+    }
+
+    public void setCodigoLon(String codigoLon) {
+        this.codigoLon = codigoLon;
     }
 
     public String getEmailDestinatario() {
@@ -130,8 +151,6 @@ public class Pacote {
     public void setDescObserv(String descObserv) {
         this.descObserv = descObserv;
     }
-
-    
 
     
 }

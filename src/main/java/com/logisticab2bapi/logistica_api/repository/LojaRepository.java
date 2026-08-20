@@ -26,14 +26,7 @@ public interface LojaRepository extends JpaRepository<Loja, Long> {
     List<Loja> findByIdUsuario(Long idUsuario);
     List<Loja> findByIdUsuarioAndAtivoTrue(Long idUsuario);
     //Long listarLoja(Loja loja);
-    
-    
- 
-    
-    
-    
-    
-    
+  
 }
     
 
